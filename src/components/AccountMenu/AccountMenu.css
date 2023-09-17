@@ -1,0 +1,58 @@
+.account__container{
+    margin: 0 0 0 0;
+    padding: 0;
+    width: 100px;
+    height: 32px;
+    border-radius: 40px;
+    box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    flex-shrink: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.account__container:hover{
+    opacity: 0.8;
+    transition: 0.2s ease;
+}
+
+.account__logo-container{
+    margin: 0 3px 0 0;
+    padding: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: none;
+    background-color: #F9F9F9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.account__text{
+    margin: 0 0 0 10px;
+    padding: 0;
+    color: black;
+    font-size: 13px;
+    line-height: 12px;
+    font-weight: 500;
+}
+
+.account__logo{
+    width: 12px;
+    height: 12px;
+    margin: 0 0 0 0;
+    padding: 0;
+}
+
+.theme__dark_account{
+    background-color: #2BE080;
+}

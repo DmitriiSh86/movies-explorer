@@ -1,0 +1,68 @@
+.popup__container{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    position:fixed;
+    top: 0;
+    right: 0;
+}
+
+.popup__box{
+    max-width: 520px;
+    height: 100vh;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.popup-open{
+    display: block;
+}
+
+.popup__close{
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    box-shadow: none;
+    border: none;
+    background: url(../../images/cross.svg);
+    background-size: contain;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.popup__account{
+    margin-bottom: 90px;
+}
+
+.popup__nav{
+    margin-top: 159px;
+}
+
+@media (max-width: 550px){
+    .popup__box{
+        width: 100%;
+    }
+
+    .popup__close{
+        top: 13px;
+        right: 13px;
+    }
+
+    .popup__nav{
+        margin-top: 145px;
+    }
+
+    .popup__account{
+        margin-bottom: 46px;
+    }
+}

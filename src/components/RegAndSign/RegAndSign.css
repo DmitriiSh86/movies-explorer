@@ -1,0 +1,66 @@
+.regandsign__container{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+}
+
+.regandsign__link_reg{
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.regandsign__link_reg:hover{
+    opacity: 0.8;
+    transition: 0.2s ease;
+}
+
+.regandsign__link_sign{
+    width: 76px;
+    height: 32px;
+    border-radius: 3px;
+    background-color: #2BE080;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.regandsign__link_sign:hover{
+    opacity: 0.8;
+    transition: 0.2s ease;
+}
+
+@media (max-width: 600px){
+    .regandsign__container{
+        gap: 14px;
+    }
+
+    .regandsign__link_sign{
+        width: 54px;
+        height: 26px;
+        font-size: 10px;
+    }
+
+    .regandsign__link_reg{
+        font-size: 10px;
+    }
+
+
+}

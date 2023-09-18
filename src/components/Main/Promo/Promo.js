@@ -2,7 +2,6 @@ import React from "react";
 import logoWeb from '../../../images/logo-web.svg'
 
 function Promo() {
-    
 
     return(
         <section className="promo__container">

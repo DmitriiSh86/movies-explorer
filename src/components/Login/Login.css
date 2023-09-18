@@ -1,4 +1,4 @@
-.login__container {
+.login {
     max-width: 396px;
     margin: 0 auto;
     padding: 0;
@@ -73,6 +73,10 @@
     padding: 0;
     padding-bottom: 9px;
     margin-bottom: 42px;
+}
+
+.login__input:focus {
+    border-color: #3456f3;
 }
 
 .login__button {

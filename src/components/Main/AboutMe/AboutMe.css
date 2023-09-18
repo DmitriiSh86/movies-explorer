@@ -30,6 +30,7 @@
     margin: 0 0 0 0;
     width: 100%;
     justify-content: space-between;
+    gap: 40px;
 }
 
 .about-me__block_text{

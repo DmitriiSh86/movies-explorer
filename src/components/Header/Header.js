@@ -8,7 +8,7 @@ import Burger from "../Burger/Burger"
 
 function Header({ isLoggedIn, themeAccount, themeNav, themeBurger, openPopup }) {
     return (
-        <div className="header__container">
+        <header className="header__container">
             <Logo logo__class = 'logo__header' />
             <div className="header__menu_nav">
                 {isLoggedIn === true && (
@@ -32,7 +32,7 @@ function Header({ isLoggedIn, themeAccount, themeNav, themeBurger, openPopup }) 
             {isLoggedIn !== true && (
                 <RegAndSign />
             )}
-        </div>
+        </header>
     );
 }
 

@@ -30,7 +30,7 @@ function App() {
     }
 
     return (
-      <div className="app">
+      <section className="app">
           <Routes>
             <Route path="/" element={
               <>
@@ -105,7 +105,7 @@ function App() {
               isOpen={isPopupOpen}
               popupClose = {popupClose}
           />
-      </div>
+      </section>
     );
 }
 

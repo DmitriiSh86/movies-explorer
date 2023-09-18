@@ -24,6 +24,13 @@
     font-size: 28px;
     line-height: 34px;
     padding: 0;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid white;
+}
+
+.search-form__input:focus {
+    border-color: #E8E8E8;
 }
 
 .search-form__button{

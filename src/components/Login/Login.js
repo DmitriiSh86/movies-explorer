@@ -24,7 +24,7 @@ function Login({setIsLoggedIn}) {
     }
 
     return(
-        <div className="login__container">
+        <section className="login">
             <form className="login__form">
                 <div className="login__form-container">
                     <Logo logo__class = 'logo__form' />
@@ -36,7 +36,9 @@ function Login({setIsLoggedIn}) {
                             name='email'
                             type='email'
                             className="login__input"
-                            value={formValue.email}>
+                            value={formValue.email}
+                            required
+                            >
                         </input>
                         <span className="login__input-span">E-mail</span>
                     </label>
@@ -46,8 +48,12 @@ function Login({setIsLoggedIn}) {
                             id='password'
                             name='password'
                             type='password'
+                            minLength="8"
+				            maxLength="30"
                             className="login__input"
-                            value={formValue.password}>
+                            value={formValue.password}
+                            required
+                            >
                         </input>
                         <span className="login__input-span">Пароль</span>
                     </label>
@@ -58,8 +64,7 @@ function Login({setIsLoggedIn}) {
                 <p className="login__link_text">Еще не зарегистрированы?</p>
                 <Link to='/signup' className="login__link">Регистрация</Link>
             </div>
-            
-        </div>
+        </section>
     )
 }
 

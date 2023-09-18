@@ -4,7 +4,7 @@ import NavMovies from "../NavMovies/NavMovies"
 
 function Popup({isOpen, popupClose}) {
     return(
-        <div className={`popup__container ${isOpen ? 'popup-open' : ''}`}>
+        <section className={`popup__container ${isOpen ? 'popup-open' : ''}`}>
             <div className="popup__box">
                 <div className="popup__nav">
                     <NavMovies />
@@ -18,7 +18,7 @@ function Popup({isOpen, popupClose}) {
                     onClick={popupClose}
                 />
             </div>   
-        </div>
+        </section>
     )
 }
 

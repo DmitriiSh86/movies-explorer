@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 function NavMovies({themeNav}) {
     const location = useLocation();
     return (
-        <div className="nav__container">
+        <section className="nav__container">
             <div className="nav__element">
                 <Link to="/" className={`nav__link nav__link_main`}>
                     Главная
@@ -23,7 +23,7 @@ function NavMovies({themeNav}) {
                 </Link>
                 {location.pathname === "/saved-movies" && <div className="nav__border_saved-movies"></div>}
             </div> 
-        </div>
+        </section>
     );
 }
 

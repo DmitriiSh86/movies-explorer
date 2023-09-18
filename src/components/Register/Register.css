@@ -62,6 +62,10 @@
     margin-bottom: 42px;
 }
 
+.register__input:focus {
+    border-color: #3456f3;
+}
+
 .register__button {
     background-color: #3456F3;
     min-height: 45px;

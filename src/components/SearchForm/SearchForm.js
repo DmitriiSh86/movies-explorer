@@ -20,10 +20,13 @@ function SearchForm() {
                 <input
                     onChange={handleChange} 
                     id='searchFilm'
+                    type='text'
                     name='searchFilm'
                     placeholder="Фильм"
                     className="search-form__input"
-                    value={formValue.searchFilm}>
+                    value={formValue.searchFilm}
+                    required
+                    >
                 </input>
                 <button type="submit" className="search-form__button">Найти</button>
             </form>

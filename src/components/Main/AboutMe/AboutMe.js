@@ -16,7 +16,6 @@ function AboutMe() {
                 </div>
                 <img src ={myPhoto} alt="Мое фото" className="about-me__block_photo"/>
             </div>
-            
         </section>
     )
 }

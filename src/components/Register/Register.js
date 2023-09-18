@@ -18,7 +18,7 @@ function Register() {
     }
 
     return(
-        <div className="register__container">
+        <section className="register__container">
             <form className="register__form">
                 <div className="register__form-container">
                     <Logo logo__class = 'logo__form' />
@@ -28,9 +28,11 @@ function Register() {
                             onChange={handleChange}
                             id='name'
                             name='name'
-                            type='name'
+                            type='text'
                             className="register__input"
-                            value={formValue.name}>
+                            value={formValue.name}
+                            required
+                            >
                         </input>
                         <span className="register__input-span">Имя</span>
                     </label>
@@ -41,7 +43,9 @@ function Register() {
                             name='email'
                             type='email'
                             className="register__input"
-                            value={formValue.email}>
+                            value={formValue.email}
+                            required
+                            >
                         </input>
                         <span className="register__input-span">E-mail</span>
                     </label>
@@ -51,8 +55,12 @@ function Register() {
                             id='password'
                             name='password'
                             type='password'
+                            minLength="8"
+				            maxLength="30"
                             className="register__input"
-                            value={formValue.password}>
+                            value={formValue.password}
+                            required
+                            >
                         </input>
                         <span className="register__input-span">Пароль</span>
                     </label>
@@ -63,8 +71,7 @@ function Register() {
                 <p className="register__link_text">Уже зарегистрированы?</p>
                 <Link to='/signin' className="register__link">Войти</Link>
             </div>
-            
-        </div>
+        </section>
     )
 }
 

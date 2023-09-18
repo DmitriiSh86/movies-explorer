@@ -29,34 +29,36 @@ function Login({setIsLoggedIn}) {
                 <div className="login__form-container">
                     <Logo logo__class = 'logo__form' />
                     <h2 className="login__title">Рады видеть!</h2>
-                    <label className="login__input-field">
-                        <input
-                            onChange={handleChange}
-                            id='email'
-                            name='email'
-                            type='email'
-                            className="login__input"
-                            value={formValue.email}
-                            required
-                            >
-                        </input>
-                        <span className="login__input-span">E-mail</span>
-                    </label>
-                    <label className="login__input-field">
-                        <input
-                            onChange={handleChange}
-                            id='password'
-                            name='password'
-                            type='password'
-                            minLength="8"
-				            maxLength="30"
-                            className="login__input"
-                            value={formValue.password}
-                            required
-                            >
-                        </input>
-                        <span className="login__input-span">Пароль</span>
-                    </label>
+                    <div className="login__input-container">
+                        <label className="login__input-field">
+                            <input
+                                onChange={handleChange}
+                                id='email'
+                                name='email'
+                                type='email'
+                                className="login__input"
+                                value={formValue.email}
+                                required
+                                >
+                            </input>
+                            <span className="login__input-span">E-mail</span>
+                        </label>
+                        <label className="login__input-field">
+                            <input
+                                onChange={handleChange}
+                                id='password'
+                                name='password'
+                                type='password'
+                                minLength="8"
+                                maxLength="30"
+                                className="login__input"
+                                value={formValue.password}
+                                required
+                                >
+                            </input>
+                            <span className="login__input-span">Пароль</span>
+                        </label>
+                    </div>
                 </div>
                 <button type="submit" onClick={logIn} className="login__button">Войти</button>
             </form>

@@ -23,7 +23,7 @@ function Profile({setIsLoggedIn}) {
         <section className="profile__container">
             <form className="profile__form">
                 <div className="profile__form-container">
-                    <h2 className="profile__title">Привет, Дмитрий!</h2>
+                    <h2 className="profile__title">Привет, Виталий!</h2>
                     <div className="profile__input_container">
                         <p className="profile__input_label">Имя</p>
                         <input
@@ -34,7 +34,7 @@ function Profile({setIsLoggedIn}) {
                             placeholder="Dmitrii"
                             className="profile__input"
                             value={formValue.name}
-                        >   
+                        >
                         </input>
                     </div>
                     <div className="profile__input_border"></div>

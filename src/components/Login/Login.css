@@ -6,7 +6,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
 }
 
 .login__title {
@@ -35,6 +34,15 @@
     margin-top: 70px;
 }
 
+.login__input-container{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+}
+
 .login__input-field{
     position: relative;
     width: 100%;
@@ -50,7 +58,7 @@
     color: #A0A0A0;
     position: absolute;
     width: 100%;
-    top: -18px;
+    top: -17px;
     right: 0;
     transition: 0.5s;
 }
@@ -72,7 +80,6 @@
     line-height: 15px;
     padding: 0;
     padding-bottom: 9px;
-    margin-bottom: 42px;
 }
 
 .login__input:focus {
@@ -89,7 +96,7 @@
     line-height: normal;
     cursor: pointer;
     border: none;
-    margin: 0 0 16px 0;
+    margin: 221px 0 16px 0;
 }
 
 .login__button:hover{
@@ -130,41 +137,25 @@
     transition: 0.2s ease;
 }
 
-@media (min-height: 720px){
-    .login__form-container {
-        margin: 180px 0 0 0;
-    }
-
-    .login__link-group{
-        margin-bottom: 170px;
-    }
-}
-
-@media (min-height: 1000px){
-    .login__form-container {
-        margin: 232px 0 0 0;
+@media (max-width:1000px) {
+    .login__form-container{
+        margin-top: 232px;
     }
 
     .login__link-group{
         margin-bottom: 232px;
     }
-}
+ }
 
-@media(min-height:720px) and (max-width:500px) {
-    .login__form-container {
-        margin: 56px 0 0 0;
+ @media (max-width:600px) {
+    .login__form-container{
+        margin-top: 56px;
     }
 
     .login__link-group{
         margin-bottom: 30px;
     }
 
-    .login__title {
-        margin: 50px 0 97px 0;
-    }
- }
-
- @media (max-width:600px) {
     .login__form {
         width: 260px;
     }
@@ -184,11 +175,13 @@
     .login__button {
         min-height: 45px;
         font-size: 12px;
-        margin-bottom: 15px;
+        margin-bottom: 14px;
+        margin-top: 309px;
     }
 
     .login__title {
         align-self: center;
+        margin: 50px 0 97px 0;
     }
  }
 

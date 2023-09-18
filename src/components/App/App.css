@@ -7,8 +7,3 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
 }
-
-.app__header_dark{
-    width: 100%;
-    background-color: #073042;
-}

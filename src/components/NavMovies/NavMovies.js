@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 function NavMovies({themeNav}) {
     const location = useLocation();
     return (
-        <section className="nav__container">
+        <section className="nav__container" aria-label="Menu">
             <div className="nav__element">
                 <Link to="/" className={`nav__link nav__link_main`}>
                     Главная

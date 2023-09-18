@@ -4,7 +4,7 @@ import NavMovies from "../NavMovies/NavMovies"
 
 function Popup({isOpen, popupClose}) {
     return(
-        <section className={`popup__container ${isOpen ? 'popup-open' : ''}`}>
+        <section className={`popup__container ${isOpen ? 'popup-open' : ''}`} aria-label="Popup">
             <div className="popup__box">
                 <div className="popup__nav">
                     <NavMovies />

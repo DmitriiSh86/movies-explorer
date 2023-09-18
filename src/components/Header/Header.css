@@ -1,3 +1,7 @@
+.header{
+    width: 100%;
+}
+
 .header__container{
     min-height: 74px;
     max-width: 1280px;
@@ -7,6 +11,10 @@
     align-items: center;
     margin: 0 auto;
     padding: 0 70px 0 70px;
+}
+
+.header__dark{
+    background-color: #073042;
 }
 
 .header__menu_account{

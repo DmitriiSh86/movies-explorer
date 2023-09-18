@@ -78,7 +78,7 @@
     .not-found__link{
         top: 404px;
         font-size: 12px;
-        font-weight: 400px;
+        font-weight: 400;
         line-height: normal;
     }
 }

@@ -30,19 +30,18 @@ function App() {
     }
 
     return (
-      <section className="app">
+      <div className="app">
           <Routes>
             <Route path="/" element={
               <>
-                <div className='app__header_dark'>
-                  <Header 
-                    isLoggedIn = {isLoggedIn} 
-                    themeAccount = "theme__dark_account"
-                    themeNav = "theme__dark_nav"
-                    themeBurger = "theme__dark_burger"
-                    openPopup = {openPopup}
-                  />
-                </div>
+                <Header 
+                  isLoggedIn = {isLoggedIn}
+                  themeHeader = {'header__dark'}
+                  themeAccount = "theme__dark_account"
+                  themeNav = "theme__dark_nav"
+                  themeBurger = "theme__dark_burger"
+                  openPopup = {openPopup}
+                />
                 <Main />
                 <Footer />
               </>
@@ -105,7 +104,7 @@ function App() {
               isOpen={isPopupOpen}
               popupClose = {popupClose}
           />
-      </section>
+      </div>
     );
 }
 

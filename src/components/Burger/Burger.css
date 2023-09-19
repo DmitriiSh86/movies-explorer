@@ -1,0 +1,32 @@
+.burger__container{
+    margin: 0;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    background-color: transparent;
+    border: none;
+    background-image: url('../../images/burger-black.svg');
+    cursor: pointer;
+    background-size: cover
+}
+
+.burger__container:hover{
+    opacity: 0.8;
+    transition: 0.2s ease;
+}
+
+.theme__dark_burger{
+    background-image: url('../../images/burger-white.svg');
+}
+
+@media (max-width:600px) {
+    .burger__container{
+        width: 40px;
+        height: 43px;
+        background-image: url('../../images/burger-mini.svg');
+    }
+
+    .theme__dark_burger{
+        background-image: url('../../images/burger-white-mini.svg');
+    }
+ }

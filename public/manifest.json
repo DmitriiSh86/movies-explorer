@@ -1,0 +1,9 @@
+{
+  "short_name": "Movies Explorer",
+  "name": "Movies-explorer-frontend",
+
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

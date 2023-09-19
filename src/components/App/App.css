@@ -1,0 +1,9 @@
+.app{
+    margin: 0 auto;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}

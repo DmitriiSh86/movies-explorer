@@ -1,6 +1,6 @@
 import './App.css';
-import { React, useState } from "react";
-import { Route, Routes} from 'react-router-dom'
+import { React, useState, useEffect } from "react";
+import { Route, Routes, useNavigate} from 'react-router-dom'
 
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
@@ -16,10 +16,17 @@ import moviesData from '../../utils/moviesData'
 
 import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
+import {getProfile} from "../../utils/MainApi"
+
 function App() {
+    const navigate = useNavigate();
     // eslint-disable-next-line no-unused-vars
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [isPopupOpen, setIsPopupOpen] = useState(false)
+
+    const [currentUser, setCurrentUser] = useState({});
+
+    const [isOk, setIsOk] = useState(false)
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -28,6 +35,27 @@ function App() {
     function popupClose(){
       setIsPopupOpen(false)
     }
+
+    const checkToken = () => {
+      getProfile()
+      .then(({data}) => {
+        if (!data){
+          return
+        }        
+        setIsLoggedIn(true);
+        navigate('/')
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setIsLoggedIn(false);
+      })
+    }
+
+    useEffect(() => {
+      checkToken();
+      // eslint-disable-next-line
+    }, [])
+
 
     return (
       <div className="app">
@@ -86,12 +114,12 @@ function App() {
             }/>
             <Route path="/signup" element={
               <>            
-                <Register />
+                <Register setIsOk={setIsOk} />
               </>
             }/>
             <Route path="/signin" element={
               <>
-                <Login setIsLoggedIn = {setIsLoggedIn}/>
+                <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk} setCurrentUser={setCurrentUser}/>
               </>
             }/>
             <Route path="/*" element={

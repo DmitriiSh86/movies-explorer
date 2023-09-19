@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate} from 'react-router-dom'
+import {signOut} from "../../utils/MainApi"
 
 function Profile({setIsLoggedIn}) {
+    const navigate = useNavigate();
+
     const [formValue, setFormValue] = useState({
         name: '',
         email: '',
@@ -16,7 +20,14 @@ function Profile({setIsLoggedIn}) {
     }
 
     function logOut(){
-        setIsLoggedIn(false);
+        signOut()
+        .then((data) => {
+            setIsLoggedIn(false);
+            navigate('/');
+        })
+        .catch((error) => {
+            console.log(error.message)
+        })
     }
 
     return(

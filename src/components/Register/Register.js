@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import {Link} from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import Logo from "../Logo/Logo"
+import {signup} from "../../utils/MainApi"
 
-function Register() {
+function Register({setIsOk}) {
+    const navigate = useNavigate();
+
     const [formValue, setFormValue] = useState({
         name: '',
         email: '',
@@ -17,9 +20,21 @@ function Register() {
         })
     }
 
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        signup(formValue.name, formValue.email, formValue.password)
+        .then((data) => {
+            setIsOk(true);
+            navigate('/signin');
+        })
+        .catch((error) => {
+            setIsOk(false);
+        })
+    }
+
     return(
         <section className="register__container">
-            <form className="register__form">
+            <form onSubmit={handleSubmit} className="register__form">
                 <div className="register__form-container">
                     <Logo logo__class = 'logo__form' />
                     <h2 className="register__title">Добро пожаловать!</h2>

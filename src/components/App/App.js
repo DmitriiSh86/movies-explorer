@@ -12,11 +12,14 @@ import Register from '../Register/Register.js'
 import Login from '../Login/Login.js'
 import NotFound from '../NotFound/NotFound.js'
 import Popup from '../Popup/Popup.js'
-import moviesData from '../../utils/moviesData'
 
 import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
-import {getProfile} from "../../utils/MainApi"
+import {CurrentUserContext} from '../../contexts/CurrentUserContext';
+
+import {profileGet, moviesGet, moviesPost, moviesDelete} from "../../utils/MainApi"
+
+const DATA_BASE_URL = 'https://api.nomoreparties.co'
 
 function App() {
     const navigate = useNavigate();
@@ -25,8 +28,11 @@ function App() {
     const [isPopupOpen, setIsPopupOpen] = useState(false)
 
     const [currentUser, setCurrentUser] = useState({});
+    const [movies, setMovies] = useState([]);
+    const [moviesSaved, setMoviesSaved] = useState([]);
 
     const [isOk, setIsOk] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -36,8 +42,59 @@ function App() {
       setIsPopupOpen(false)
     }
 
+    function moviesHandleLike(movie){
+      moviesPost({
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: `${DATA_BASE_URL}${movie.image.url}`,
+        trailer: movie.trailerLink,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+        thumbnail: `${DATA_BASE_URL}${movie.image.formats.thumbnail.url}`,
+        movieId: movie.id
+      })
+      .then((data) => {
+        moviesGet()
+        .then((data) => {
+          setMoviesSaved(data.data)
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+      })
+      .catch(err => console.log(`Ошибка.....: ${err}`))
+    }
+
+    function moviesHandleDelete(movie){
+      moviesDelete(movie._id)
+      .then((data) => {
+        moviesGet()
+        .then((data) => {
+          setMoviesSaved(data.data)
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+      })
+      .catch(err => console.log(`Ошибка.....: ${err}`))
+    }
+
+    
+
+    useEffect(() => {
+      if (isLoggedIn){
+        Promise.all([profileGet(), moviesGet()])
+        .then(([userData, moviesData]) => {
+          setCurrentUser(userData.data);
+          setMoviesSaved(moviesData.data);
+          console.log('hello')
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+      }
+      
+    },[isLoggedIn]);
+
     const checkToken = () => {
-      getProfile()
+      profileGet()
       .then(({data}) => {
         if (!data){
           return
@@ -59,79 +116,88 @@ function App() {
 
     return (
       <div className="app">
-          <Routes>
-            <Route path="/" element={
-              <>
-                <Header 
-                  isLoggedIn = {isLoggedIn}
-                  themeHeader = {'header__dark'}
-                  themeAccount = "theme__dark_account"
-                  themeNav = "theme__dark_nav"
-                  themeBurger = "theme__dark_burger"
-                  openPopup = {openPopup}
-                />
-                <Main />
-                <Footer />
-              </>
-            }/>
-            <Route path="/movies" element={
-              <>
-                <Header 
-                  isLoggedIn = {isLoggedIn}
-                  openPopup = {openPopup}
-                />
-                <ProtectedRoute element={Movies}
-                  isLoggedIn = {isLoggedIn}
-                  moviesData={moviesData}
-                />
-                <Footer />
-              </>
-            }/>
-            <Route path="/saved-movies" element={
-              <>
-                <Header
-                  isLoggedIn = {isLoggedIn}
-                  openPopup = {openPopup}
-                />
-                <ProtectedRoute element={SavedMovies}
-                  isLoggedIn = {isLoggedIn}
-                  moviesData={moviesData}
-                />
-                <Footer />
-              </>
-            }/>
-            <Route path="/profile" element={
-              <>
-                <Header
-                  isLoggedIn = {isLoggedIn}
-                  openPopup = {openPopup}
-                />
-                <ProtectedRoute element={Profile}
-                  isLoggedIn = {isLoggedIn}
-                  setIsLoggedIn = {setIsLoggedIn}
-                />
-              </>
-            }/>
-            <Route path="/signup" element={
-              <>            
-                <Register setIsOk={setIsOk} />
-              </>
-            }/>
-            <Route path="/signin" element={
-              <>
-                <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk} setCurrentUser={setCurrentUser}/>
-              </>
-            }/>
-            <Route path="/*" element={
-              <>
-                <NotFound />
-              </>
-            }/>
-          </Routes>
-          <Popup 
-              isOpen={isPopupOpen}
-              popupClose = {popupClose}
-          />
+          <CurrentUserContext.Provider value={currentUser}>
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <Header 
+                    isLoggedIn = {isLoggedIn}
+                    themeHeader = {'header__dark'}
+                    themeAccount = "theme__dark_account"
+                    themeNav = "theme__dark_nav"
+                    themeBurger = "theme__dark_burger"
+                    openPopup = {openPopup}
+                  />
+                  <Main />
+                  <Footer />
+                </>
+              }/>
+              <Route path="/movies" element={
+                <>
+                  <Header 
+                    isLoggedIn = {isLoggedIn}
+                    openPopup = {openPopup}
+                  />
+                  <ProtectedRoute element={Movies}
+                    isLoggedIn = {isLoggedIn}
+                    moviesData={movies}
+                    setMovies = {setMovies}
+                    moviesSaved = {moviesSaved}
+                    moviesHandleLike = {moviesHandleLike}
+                    moviesHandleDelete = {moviesHandleDelete}
+                    isLoading = {isLoading}
+                    setIsLoading = {setIsLoading}
+                  />
+                  <Footer />
+                </>
+              }/>
+              <Route path="/saved-movies" element={
+                <>
+                  <Header
+                    isLoggedIn = {isLoggedIn}
+                    openPopup = {openPopup}
+                  />
+                  <ProtectedRoute element={SavedMovies}
+                    isLoggedIn = {isLoggedIn}
+                    moviesData={moviesSaved}
+                    moviesHandleDelete = {moviesHandleDelete}
+                  />
+                  <Footer />
+                </>
+              }/>
+              <Route path="/profile" element={
+                <>
+                  <Header
+                    isLoggedIn = {isLoggedIn}
+                    openPopup = {openPopup}
+                  />
+                  <ProtectedRoute element={Profile}
+                    isLoggedIn = {isLoggedIn}
+                    setIsLoggedIn = {setIsLoggedIn}
+                  />
+                </>
+              }/>
+              <Route path="/signup" element={
+                <>            
+                  <Register setIsOk={setIsOk} />
+                </>
+              }/>
+              <Route path="/signin" element={
+                <>
+                  <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk} setCurrentUser={setCurrentUser}/>
+                </>
+              }/>
+              <Route path="/*" element={
+                <>
+                  <NotFound />
+                </>
+              }/>
+            </Routes>
+            <Popup 
+                isOpen={isPopupOpen}
+                popupClose = {popupClose}
+            />
+          </CurrentUserContext.Provider>
       </div>
     );
 }

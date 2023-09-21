@@ -3,7 +3,7 @@ import React from "react";
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
 import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
-import likeButtonDelete from '../../images/like-delete.svg'
+import iconButtonDelete from '../../images/like-delete.svg'
 
 function SavedMovies(props) {
     return(
@@ -15,7 +15,11 @@ function SavedMovies(props) {
                     <MoviesCardList
                         key={movie._id}
                         movie = {movie}
-                        likeButton={likeButtonDelete}
+                        iconNotActivButton={iconButtonDelete}
+                        moviesHandleDelete = {props.moviesHandleDelete}
+                        nameRU = {movie.nameRU}
+                        image = {movie.image}
+                        duration = {movie.duration}
                     />)}
             </ul> 
         </section>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signin} from "../../utils/MainApi"
-import {getProfile} from "../../utils/MainApi"
 
 function Login({ setIsLoggedIn, setIsOk, setCurrentUser }) {
     const navigate = useNavigate();
@@ -23,9 +22,6 @@ function Login({ setIsLoggedIn, setIsOk, setCurrentUser }) {
         evt.preventDefault();
         signin(formValue.email, formValue.password)
         .then((data) => {
-            getProfile().then((user) => {
-                setCurrentUser(user.data)
-            }).catch((err) => console.log(err));
             setIsOk(true);
             setIsLoggedIn(true);
             navigate('/');

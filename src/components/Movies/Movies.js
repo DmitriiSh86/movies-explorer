@@ -5,23 +5,35 @@ import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
 import More from '../More/More'
 import likeButtonActiv from '../../images/like-activ.svg'
 import likeButtonNotActiv from '../../images/like-not-activ.svg'
-
+import Preloader from '../Preloader/Preloader'
 
 function Movies(props) {
     return(
         <section className="movies">
-            <SearchForm />
+            <SearchForm setMovies = {props.setMovies} setIsLoading = {props.setIsLoading}/>
             <ShortFilmSwitcher />
+            {props.isLoading === true ? (
+                <Preloader /> ) : props.moviesData.length === 0 ? (
+                <>Ничего не происходит</>
+                ) : (
             <ul className="movies__container" aria-label="movies">
-                {props.moviesData.map((movie) => 
+                {props.moviesData.map((movie) =>
                     <MoviesCardList 
-                        key={movie._id} 
-                        movie={movie}
-                        likeButton={likeButtonActiv}
-                        likeButtonNotActiv={likeButtonNotActiv}
+                        key={movie.id}
+                        movie = {movie}
+                        iconActivButton={likeButtonActiv}
+                        iconNotActivButton={likeButtonNotActiv}
+                        nameRU = {movie.nameRU}
+                        image = {`https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`}
+                        duration = {movie.duration}
+                        moviesHandleLike = {props.moviesHandleLike}
+                        moviesHandleDelete = {props.moviesHandleDelete}
+                        moviesSaved = {props.moviesSaved}
                     />)}
-            </ul> 
-            <More />           
+            </ul>
+            )}
+            <More />
+            
         </section>
     )
 }

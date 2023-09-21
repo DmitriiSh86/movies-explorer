@@ -37,17 +37,6 @@ export const signin = (email, password) => {
     })
 }
 
-export const getProfile = () => {
-    return request(`${BASE_URL}/users/me`, {
-        method: 'GET',
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        },
-        credentials: "include"
-    })
-}
-
 export const signOut = () => {
     return request(`${BASE_URL}/signout`, {
         method: 'GET',
@@ -58,3 +47,73 @@ export const signOut = () => {
         credentials: "include"
     })
 }
+
+export const profileGet = () => {
+    return request(`${BASE_URL}/users/me`, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        credentials: "include"
+    })
+}
+
+export const moviesGet = () => {
+    return request(`${BASE_URL}/movies`, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        credentials: "include"
+    })
+}
+
+export const moviesPost = ({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId
+}) => {
+    return request(`${BASE_URL}/movies`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            country,
+            director,
+            duration,
+            year,
+            description,
+            image,
+            trailer,
+            nameRU,
+            nameEN,
+            thumbnail,
+            movieId
+        }),
+    })
+}
+
+export const moviesDelete = (moviesId) => {
+    return request(`${BASE_URL}/movies/${moviesId}`, {
+        method: 'DELETE',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        credentials: "include"
+    })
+}
+
+

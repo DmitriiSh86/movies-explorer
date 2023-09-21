@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
-function SearchForm() {
+import moviesDataFull from '../../utils/moviesDataFull'
+
+function SearchForm({setMovies, setIsLoading}) {
     const [formValue, setFormValue] = useState({
         name: '',
         email: '',
@@ -14,9 +16,21 @@ function SearchForm() {
             [name]: value
         })
     }
+
+    const findSubmit = (evt) => {
+        evt.preventDefault();
+        setIsLoading(true);
+        setTimeout(() => {
+            setMovies(moviesDataFull);
+            setIsLoading(false);
+          }, 1000);
+
+        
+    }
+
     return(
         <section className="search-form__container">
-            <form className="search-form__form">
+            <form onSubmit={findSubmit} className="search-form__form">
                 <input
                     onChange={handleChange} 
                     id='searchFilm'

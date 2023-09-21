@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate} from 'react-router-dom'
 import {signOut} from "../../utils/MainApi"
 
+import {CurrentUserContext} from '../../contexts/CurrentUserContext';
+
 function Profile({setIsLoggedIn}) {
     const navigate = useNavigate();
+
+    const currentUser = useContext(CurrentUserContext);
 
     const [formValue, setFormValue] = useState({
         name: '',
@@ -34,7 +38,7 @@ function Profile({setIsLoggedIn}) {
         <section className="profile__container">
             <form className="profile__form">
                 <div className="profile__form-container">
-                    <h2 className="profile__title">Привет, Виталий!</h2>
+                    <h2 className="profile__title">Привет, {currentUser.name}</h2>
                     <div className="profile__input_container">
                         <p className="profile__input_label">Имя</p>
                         <input
@@ -42,7 +46,7 @@ function Profile({setIsLoggedIn}) {
                             id='name'
                             name='name'
                             type='text'
-                            placeholder="Dmitrii"
+                            placeholder={currentUser.name}
                             className="profile__input"
                             value={formValue.name}
                         >
@@ -56,7 +60,7 @@ function Profile({setIsLoggedIn}) {
                             id='email'
                             name='email'
                             type='email'
-                            placeholder="dmitrii@ya.ru"
+                            placeholder={currentUser.email}
                             className="profile__input"
                             value={formValue.email}
                         >

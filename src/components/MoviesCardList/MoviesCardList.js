@@ -37,7 +37,6 @@ function MoviesCardList({
         }
     }
 
-
     function durationConvert(min){
         let hours = Math.trunc(min/60);
         let minutes = min % 60;
@@ -49,8 +48,6 @@ function MoviesCardList({
         moviesHandleDelete(movie);
         isLiked = false;
     }
-
-    
 
     return(
         <li className="movies-card-list__container">

@@ -14,26 +14,27 @@ function Movies(props) {
             <ShortFilmSwitcher />
             {props.isLoading === true ? (
                 <Preloader /> ) : props.moviesData.length === 0 ? (
-                <>Ничего не происходит</>
+                <>Ничего не найдено</>
                 ) : (
-            <ul className="movies__container" aria-label="movies">
-                {props.moviesData.map((movie) =>
-                    <MoviesCardList 
-                        key={movie.id}
-                        movie = {movie}
-                        iconActivButton={likeButtonActiv}
-                        iconNotActivButton={likeButtonNotActiv}
-                        nameRU = {movie.nameRU}
-                        image = {`https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`}
-                        duration = {movie.duration}
-                        moviesHandleLike = {props.moviesHandleLike}
-                        moviesHandleDelete = {props.moviesHandleDelete}
-                        moviesSaved = {props.moviesSaved}
-                    />)}
-            </ul>
+            <div>
+                <ul className="movies__container" aria-label="movies">
+                    {props.moviesData.map((movie) =>
+                        <MoviesCardList 
+                            key={movie.id}
+                            movie = {movie}
+                            iconActivButton={likeButtonActiv}
+                            iconNotActivButton={likeButtonNotActiv}
+                            nameRU = {movie.nameRU}
+                            image = {`https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`}
+                            duration = {movie.duration}
+                            moviesHandleLike = {props.moviesHandleLike}
+                            moviesHandleDelete = {props.moviesHandleDelete}
+                            moviesSaved = {props.moviesSaved}
+                        />)}
+                </ul>
+                <More />
+            </div>
             )}
-            <More />
-            
         </section>
     )
 }

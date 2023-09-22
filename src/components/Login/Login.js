@@ -33,17 +33,21 @@ function Login({ setIsLoggedIn, setIsOk}) {
         })
     }
 
+    const [isProccessing, setIsProccessing] = useState('Войти');
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
+        setIsProccessing('Вход...')
         signin(formValue.email.value, formValue.password.value)
         .then((data) => {
-            setIsOk(true);
+            console.log('yes')
             setIsLoggedIn(true);
             navigate('/');
         })
         .catch((error) => {
-            setIsOk(false);
+            console.log('no')
         })
+        .finally(() => setIsProccessing('Войти'));
     }
 
 
@@ -87,7 +91,7 @@ function Login({ setIsLoggedIn, setIsOk}) {
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="login__button" disabled={!isValidForm}>Войти</button>
+                <button type="submit" className="login__button" disabled={!isValidForm}>{isProccessing}</button>
             </form>
             <div className="login__link-group">
                 <p className="login__link_text">Еще не зарегистрированы?</p>

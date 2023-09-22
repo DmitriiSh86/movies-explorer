@@ -25,8 +25,6 @@ function Profile({setIsLoggedIn, handleUpdateUser}) {
 
     const handleChange = (evt) => {
         const {name, value} = evt.target;
-        setIsValidForm(evt.target.closest('form').checkValidity())
-        console.log(evt.target.validity.valid)
         setFormValue({
             ...formValue,
             [name]: {
@@ -35,9 +33,17 @@ function Profile({setIsLoggedIn, handleUpdateUser}) {
                 validMessage: evt.target.validationMessage
             }
         })
+        if((evt.target.value !== currentUser[name]) && (evt.target.closest('form').checkValidity() === true)){
+            setIsValidForm(true)
+        } else {
+            setIsValidForm(false)
+        }
     }
 
+    const [isProccessing, setIsProccessing] = useState('Выйти из аккаунта');
+
     function logOut(){
+        setIsProccessing('Выход...')
         signOut()
         .then((data) => {
             setIsLoggedIn(false);
@@ -46,6 +52,7 @@ function Profile({setIsLoggedIn, handleUpdateUser}) {
         .catch((error) => {
             console.log(error.message)
         })
+        .finally(() => setIsProccessing('Выйти из аккаунта'));
     }
 
     function handleSubmit(e){
@@ -99,7 +106,7 @@ function Profile({setIsLoggedIn, handleUpdateUser}) {
                     disabled={!isValidForm}
                 >Редактировать</button>
             </form>
-            <button type="text" onClick={logOut} className="profile__logout">Выйти из аккаунта</button>
+            <button type="text" onClick={logOut} className="profile__logout">{isProccessing}</button>
         </section>
     )
 }

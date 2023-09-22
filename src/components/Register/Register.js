@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signup, signin} from "../../utils/MainApi"
 
-function Register({setIsOk, setIsLoggedIn}) {
+function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen}) {
     const navigate = useNavigate();
 
     const [formValue, setFormValue] = useState({
@@ -42,24 +42,36 @@ function Register({setIsOk, setIsLoggedIn}) {
 
     
 
-
+    const [isProccessing, setIsProccessing] = useState('Зарегистрироваться');
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
+        setIsProccessing('Регистрация...')
         signup(formValue.name.value, formValue.email.value, formValue.password.value)
         .then((data) => {
             signin(formValue.email.value, formValue.password.value)
             .then((data) => {
                 setIsLoggedIn(true);
+                setIsOk({status: true, message: 'Вы успешно зарегистрировались'});
+                setIsInfoTooltipOpen(true)
                 navigate('/movies');
             })
             .catch((error) => {
-                setIsOk(false);
+                setIsOk({status: false, message: 'Вы успешно зарегистрировались, но не получается залогиниться...'});
+                setIsInfoTooltipOpen(true)
             })
         })
         .catch((error) => {
-            setIsOk(false);
+            console.log(error)
+            if (error === 409){
+                setIsOk({status: false, message: 'Пользователь с таким Email уже зарегистрирован.'});
+                setIsInfoTooltipOpen(true)
+            } else {
+                setIsOk({status: false, message: 'Что-то не так с введенными данными'});
+                setIsInfoTooltipOpen(true)
+            }
         })
+        .finally(() => setIsProccessing('Зарегистрироваться'));
     }
 
     return(
@@ -117,7 +129,7 @@ function Register({setIsOk, setIsLoggedIn}) {
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="register__button" disabled={!isValidForm}>Зарегистрироваться</button>
+                <button type="submit" className="register__button" disabled={!isValidForm}>{isProccessing}</button>
             </form>
             <div className="register__link-group">
                 <p className="register__link_text">Уже зарегистрированы?</p>

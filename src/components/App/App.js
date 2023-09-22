@@ -12,6 +12,7 @@ import Register from '../Register/Register.js'
 import Login from '../Login/Login.js'
 import NotFound from '../NotFound/NotFound.js'
 import Popup from '../Popup/Popup.js'
+import InfoToolTip from '../InfoToolTip/InfoToolTip'
 
 import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
@@ -31,11 +32,15 @@ function App() {
     const [movies, setMovies] = useState([]);
     const [moviesSaved, setMoviesSaved] = useState([]);
 
-    const [isOk, setIsOk] = useState(false)
+    
     const [isLoading, setIsLoading] = useState(false)
 
     const [isShortMovies, setIsShortMovies] = useState(false);
     const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
+
+    const [isOk, setIsOk] = useState({status: false, message: ''})
+
+    const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -43,6 +48,12 @@ function App() {
 
     function popupClose(){
       setIsPopupOpen(false)
+    }
+
+    //function infoToolTipOpen(){setIsInfoTooltipOpen(true)}
+
+    function infoToolTipClose(){
+      setIsInfoTooltipOpen(false)
     }
 
     function moviesHandleLike(movie){
@@ -84,9 +95,14 @@ function App() {
     function handleUpdateUser(name, email) {
       profilePatch(name, email)
       .then((result) => {
+        setIsOk({status: true, message: 'Вы успешно обновили данные'});
+        setIsInfoTooltipOpen(true)
         setCurrentUser(result.data);
+
       })
       .catch(err => console.log(`Ошибка.....: ${err}`))
+        setIsOk({status: false, message: 'Что-то пошло не так...'});
+        setIsInfoTooltipOpen(true);
     }
 
     
@@ -198,12 +214,16 @@ function App() {
                   <Register
                     setIsOk={setIsOk}
                     setIsLoggedIn = {setIsLoggedIn}
+                    setIsInfoTooltipOpen={setIsInfoTooltipOpen}
                   />
                 </>
               }/>
               <Route path="/signin" element={
                 <>
-                  <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk}/>
+                  <Login
+                    setIsLoggedIn = {setIsLoggedIn}
+                    setIsOk={setIsOk}
+                  />
                 </>
               }/>
               <Route path="/*" element={
@@ -215,6 +235,11 @@ function App() {
             <Popup 
                 isOpen={isPopupOpen}
                 popupClose = {popupClose}
+            />
+            <InfoToolTip 
+                isInfoTooltipOpen={isInfoTooltipOpen}
+                infoToolTipClose = {infoToolTipClose}
+                isOk = {isOk}
             />
           </CurrentUserContext.Provider>
       </div>

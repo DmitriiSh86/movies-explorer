@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
@@ -9,7 +9,10 @@ function SavedMovies(props) {
     return(
         <section className="movies-saved">
             <SearchForm />
-            <ShortFilmSwitcher />
+            <ShortFilmSwitcher 
+                isShortMovies = {props.isShortMoviesSaved}
+                setIsShortMovies = {props.setIsShortMoviesSaved}
+            />
             <ul aria-label="photo" className="movies-saved__container">
                 {props.moviesData.map((movie) => 
                     <MoviesCardList

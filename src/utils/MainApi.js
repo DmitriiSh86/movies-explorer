@@ -1,5 +1,5 @@
-const BASE_URL = 'https://api.dmitrii-movies.nomoredomainsicu.ru';
-//const BASE_URL = 'http://localhost:4001';
+//const BASE_URL = 'https://api.dmitrii-movies.nomoredomainsicu.ru';
+const BASE_URL = 'http://localhost:4001';
 
 function checkResponse(res) {
     if (res.ok) return res.json();
@@ -56,6 +56,20 @@ export const profileGet = () => {
             "Content-Type": "application/json",
         },
         credentials: "include"
+    })
+}
+
+export const profilePatch = (name, email) => {
+    return request(`${BASE_URL}/users/me`, {
+        method: 'PATCH',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            "name": name,
+            "email": email
+        }),
     })
 }
 

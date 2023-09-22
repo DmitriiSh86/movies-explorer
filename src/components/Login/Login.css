@@ -63,6 +63,11 @@
     transition: 0.5s;
 }
 
+.login__input-span_error{
+    color: #FF3055;
+    top: 32px;
+}
+
 .login__input {
     width: 100%;
     display: flex;
@@ -86,6 +91,10 @@
     border-color: #3456f3;
 }
 
+.login__input_error {   
+    color: red;
+}
+
 .login__button {
     background-color: #3456F3;
     min-height: 45px;
@@ -99,10 +108,14 @@
     margin: 221px 0 16px 0;
 }
 
-.login__button:hover{
+.login__button:not([disabled]):hover {
     opacity: 0.8;
     transition: 0.2s ease;
 }
+
+.login__button:disabled{
+    background-color: #cccccc;
+  }
 
 .login__link-group{
     display: flex;

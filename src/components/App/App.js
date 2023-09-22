@@ -17,7 +17,7 @@ import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-import {profileGet, moviesGet, moviesPost, moviesDelete} from "../../utils/MainApi"
+import {profileGet, moviesGet, moviesPost, moviesDelete, profilePatch} from "../../utils/MainApi"
 
 const DATA_BASE_URL = 'https://api.nomoreparties.co'
 
@@ -33,6 +33,9 @@ function App() {
 
     const [isOk, setIsOk] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+
+    const [isShortMovies, setIsShortMovies] = useState(false);
+    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -74,6 +77,14 @@ function App() {
           setMoviesSaved(data.data)
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
+      })
+      .catch(err => console.log(`Ошибка.....: ${err}`))
+    }
+
+    function handleUpdateUser(name, email) {
+      profilePatch(name, email)
+      .then((result) => {
+        setCurrentUser(result.data);
       })
       .catch(err => console.log(`Ошибка.....: ${err}`))
     }
@@ -147,6 +158,8 @@ function App() {
                     moviesHandleDelete = {moviesHandleDelete}
                     isLoading = {isLoading}
                     setIsLoading = {setIsLoading}
+                    isShortMovies = {isShortMovies}
+                    setIsShortMovies = {setIsShortMovies}
                   />
                   <Footer />
                 </>
@@ -161,6 +174,8 @@ function App() {
                     isLoggedIn = {isLoggedIn}
                     moviesData={moviesSaved}
                     moviesHandleDelete = {moviesHandleDelete}
+                    isShortMoviesSaved = {isShortMoviesSaved}
+                    setIsShortMoviesSaved = {setIsShortMoviesSaved}
                   />
                   <Footer />
                 </>
@@ -174,17 +189,21 @@ function App() {
                   <ProtectedRoute element={Profile}
                     isLoggedIn = {isLoggedIn}
                     setIsLoggedIn = {setIsLoggedIn}
+                    handleUpdateUser = {handleUpdateUser}
                   />
                 </>
               }/>
               <Route path="/signup" element={
                 <>            
-                  <Register setIsOk={setIsOk} />
+                  <Register
+                    setIsOk={setIsOk}
+                    setIsLoggedIn = {setIsLoggedIn}
+                  />
                 </>
               }/>
               <Route path="/signin" element={
                 <>
-                  <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk} setCurrentUser={setCurrentUser}/>
+                  <Login setIsLoggedIn = {setIsLoggedIn} setIsOk={setIsOk}/>
                 </>
               }/>
               <Route path="/*" element={

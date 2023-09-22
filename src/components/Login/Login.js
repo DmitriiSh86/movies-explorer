@@ -3,24 +3,39 @@ import {Link, useNavigate} from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signin} from "../../utils/MainApi"
 
-function Login({ setIsLoggedIn, setIsOk, setCurrentUser }) {
+function Login({ setIsLoggedIn, setIsOk}) {
     const navigate = useNavigate();
     const [formValue, setFormValue] = useState({
-        email: '',
-        password: ''
+        email: {
+            value: '',
+            isValidInput: false,
+            validMessage: ''
+        },
+        password: {
+            value: '',
+            isValidInput: false,
+            validMessage: ''
+        }
     });
+
+    const [isValidForm, setIsValidForm] = useState(false);
 
     const handleChange = (evt) => {
         const {name, value} = evt.target;
+        setIsValidForm(evt.target.closest('form').checkValidity())
         setFormValue({
             ...formValue,
-            [name]: value
+            [name]: {
+                value: value,
+                isValidInput: evt.target.validity.valid,
+                validMessage: evt.target.validationMessage
+            }
         })
     }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        signin(formValue.email, formValue.password)
+        signin(formValue.email.value, formValue.password.value)
         .then((data) => {
             setIsOk(true);
             setIsLoggedIn(true);
@@ -46,12 +61,13 @@ function Login({ setIsLoggedIn, setIsOk, setCurrentUser }) {
                                 id='email'
                                 name='email'
                                 type='email'
-                                className="login__input"
-                                value={formValue.email}
+                                className={`login__input ${!formValue.email.isValidInput ? "login__input_error" : ""}`}
+                                value={formValue.email.value}
                                 required
                                 >
                             </input>
                             <span className="login__input-span">E-mail</span>
+                            <span className="login__input-span login__input-span_error">{formValue.email.validMessage}</span>
                         </label>
                         <label className="login__input-field">
                             <input
@@ -61,16 +77,17 @@ function Login({ setIsLoggedIn, setIsOk, setCurrentUser }) {
                                 type='password'
                                 minLength="8"
                                 maxLength="30"
-                                className="login__input"
-                                value={formValue.password}
+                                className={`login__input ${!formValue.password.isValidInput ? "login__input_error" : ""}`}
+                                value={formValue.password.value}
                                 required
                                 >
                             </input>
                             <span className="login__input-span">Пароль</span>
+                            <span className="login__input-span login__input-span_error">{formValue.password.validMessage}</span>
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="login__button">Войти</button>
+                <button type="submit" className="login__button" disabled={!isValidForm}>Войти</button>
             </form>
             <div className="login__link-group">
                 <p className="login__link_text">Еще не зарегистрированы?</p>

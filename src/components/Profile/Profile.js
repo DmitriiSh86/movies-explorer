@@ -4,22 +4,36 @@ import {signOut} from "../../utils/MainApi"
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn}) {
+function Profile({setIsLoggedIn, handleUpdateUser}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
 
-    const [formValue, setFormValue] = useState({
-        name: '',
-        email: '',
-        password: ''
+    const [formValue, setFormValue] = useState({name: {
+            value: currentUser.name,
+            isValidInput: true,
+            validMessage: ''
+        },
+        email: {
+            value: currentUser.email,
+            isValidInput: true,
+            validMessage: ''
+        }
     });
+
+    const [isValidForm, setIsValidForm] = useState(false);
 
     const handleChange = (evt) => {
         const {name, value} = evt.target;
+        setIsValidForm(evt.target.closest('form').checkValidity())
+        console.log(evt.target.validity.valid)
         setFormValue({
             ...formValue,
-            [name]: value
+            [name]: {
+                value: value,
+                isValidInput: evt.target.validity.valid,
+                validMessage: evt.target.validationMessage
+            }
         })
     }
 
@@ -34,6 +48,11 @@ function Profile({setIsLoggedIn}) {
         })
     }
 
+    function handleSubmit(e){
+        e.preventDefault();
+        handleUpdateUser(formValue.name.value, formValue.email.value)
+    }
+
     return(
         <section className="profile__container">
             <form className="profile__form">
@@ -46,11 +65,15 @@ function Profile({setIsLoggedIn}) {
                             id='name'
                             name='name'
                             type='text'
-                            placeholder={currentUser.name}
-                            className="profile__input"
-                            value={formValue.name}
+                            minLength="2"
+                            maxLength="30"
+                            required
+                            placeholder={formValue.name.value}
+                            className={`profile__input ${!formValue.name.isValidInput ? "profile__input_error" : ""}`}
+                            value={formValue.name.value}
                         >
                         </input>
+                        <span className="profile__input-span_error">{formValue.name.validMessage}</span>
                     </div>
                     <div className="profile__input_border"></div>
                     <div className="profile__input_container">
@@ -60,16 +83,23 @@ function Profile({setIsLoggedIn}) {
                             id='email'
                             name='email'
                             type='email'
-                            placeholder={currentUser.email}
-                            className="profile__input"
-                            value={formValue.email}
+                            required
+                            placeholder={formValue.email.value}
+                            className={`profile__input ${!formValue.email.isValidInput ? "profile__input_error" : ""}`}
+                            value={formValue.email.value}
                         >
                         </input>
+                        <span className="profile__input-span_error">{formValue.email.validMessage}</span>
                     </div>
                 </div>
-                <button type="submit" className="profile__button">Редактировать</button>
+                <button
+                    onClick={handleSubmit}
+                    type="submit"
+                    className="profile__button"
+                    disabled={!isValidForm}
+                >Редактировать</button>
             </form>
-            <button type="submit" onClick={logOut} className="profile__logout">Выйти из аккаунта</button>
+            <button type="text" onClick={logOut} className="profile__logout">Выйти из аккаунта</button>
         </section>
     )
 }

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 
-import moviesDataFull from '../../utils/moviesDataFull'
+import {dataBaseGet} from '../../utils/MoviesApi'
 
 function SearchForm({setMovies, setIsLoading}) {
     const [formValue, setFormValue] = useState({
-        name: '',
-        email: '',
-        password: ''
+        searchFilm: ''
     });
 
     const handleChange = (evt) => {
@@ -20,12 +18,13 @@ function SearchForm({setMovies, setIsLoading}) {
     const findSubmit = (evt) => {
         evt.preventDefault();
         setIsLoading(true);
-        setTimeout(() => {
-            setMovies(moviesDataFull);
+        dataBaseGet()
+        .then((result) => {
+            console.log(result)
+            setMovies(result);
             setIsLoading(false);
-          }, 1000);
-
-        
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))        
     }
 
     return(

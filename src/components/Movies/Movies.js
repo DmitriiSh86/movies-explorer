@@ -1,4 +1,4 @@
-import React from "react";
+import { React } from "react";
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
 import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
@@ -8,10 +8,18 @@ import likeButtonNotActiv from '../../images/like-not-activ.svg'
 import Preloader from '../Preloader/Preloader'
 
 function Movies(props) {
+    
+
     return(
         <section className="movies">
-            <SearchForm setMovies = {props.setMovies} setIsLoading = {props.setIsLoading}/>
-            <ShortFilmSwitcher />
+            <SearchForm
+                setMovies = {props.setMovies}
+                setIsLoading = {props.setIsLoading}
+            />
+            <ShortFilmSwitcher 
+                isShortMovies = {props.isShortMovies}
+                setIsShortMovies = {props.setIsShortMovies}
+            />
             {props.isLoading === true ? (
                 <Preloader /> ) : props.moviesData.length === 0 ? (
                 <>Ничего не найдено</>

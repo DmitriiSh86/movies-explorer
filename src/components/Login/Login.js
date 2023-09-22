@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signin} from "../../utils/MainApi"
 
-function Login({ setIsLoggedIn, setIsOk}) {
+function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen}) {
     const navigate = useNavigate();
     const [formValue, setFormValue] = useState({
         email: {
@@ -40,12 +40,14 @@ function Login({ setIsLoggedIn, setIsOk}) {
         setIsProccessing('Вход...')
         signin(formValue.email.value, formValue.password.value)
         .then((data) => {
-            console.log('yes')
             setIsLoggedIn(true);
+            setIsOk({status: true, message: 'Вы успешно авторизировались'});
+            setIsInfoTooltipOpen(true)
             navigate('/');
         })
         .catch((error) => {
-            console.log('no')
+            setIsOk({status: false, message: 'Что-то пошло не так...'});
+            setIsInfoTooltipOpen(true)
         })
         .finally(() => setIsProccessing('Войти'));
     }

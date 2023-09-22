@@ -50,8 +50,6 @@ function App() {
       setIsPopupOpen(false)
     }
 
-    //function infoToolTipOpen(){setIsInfoTooltipOpen(true)}
-
     function infoToolTipClose(){
       setIsInfoTooltipOpen(false)
     }
@@ -223,6 +221,7 @@ function App() {
                   <Login
                     setIsLoggedIn = {setIsLoggedIn}
                     setIsOk={setIsOk}
+                    setIsInfoTooltipOpen={setIsInfoTooltipOpen}
                   />
                 </>
               }/>

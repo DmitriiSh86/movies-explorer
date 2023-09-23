@@ -4,7 +4,7 @@ import {signOut} from "../../utils/MainApi"
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn, handleUpdateUser}) {
+function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
@@ -47,6 +47,8 @@ function Profile({setIsLoggedIn, handleUpdateUser}) {
         signOut()
         .then((data) => {
             setIsLoggedIn(false);
+            localStorage.removeItem('moviesBase');
+            setMovies([]);
             navigate('/');
         })
         .catch((error) => {

@@ -2,18 +2,18 @@ import { React } from "react";
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
 import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
+import NothingToDrow from '../NothingToDrow/NothingToDrow'
 import More from '../More/More'
 import likeButtonActiv from '../../images/like-activ.svg'
 import likeButtonNotActiv from '../../images/like-not-activ.svg'
 import Preloader from '../Preloader/Preloader'
 
 function Movies(props) {
-    
 
     return(
         <section className="movies">
             <SearchForm
-                setMovies = {props.setMovies}
+                setMoviesFound = {props.setMoviesFound}
                 setIsLoading = {props.setIsLoading}
             />
             <ShortFilmSwitcher 
@@ -21,13 +21,13 @@ function Movies(props) {
                 setIsShortMovies = {props.setIsShortMovies}
             />
             {props.isLoading === true ? (
-                <Preloader /> ) : props.moviesData.length === 0 ? (
-                <>Ничего не найдено</>
+                <Preloader /> ) : props.moviesFound.length === 0 ? (
+                <NothingToDrow />
                 ) : (
             <div>
                 <ul className="movies__container" aria-label="movies">
-                    {props.moviesData.map((movie) =>
-                        <MoviesCardList 
+                    {props.moviesToDrow.map((movie) => {
+                        return <MoviesCardList 
                             key={movie.id}
                             movie = {movie}
                             iconActivButton={likeButtonActiv}
@@ -38,9 +38,15 @@ function Movies(props) {
                             moviesHandleLike = {props.moviesHandleLike}
                             moviesHandleDelete = {props.moviesHandleDelete}
                             moviesSaved = {props.moviesSaved}
-                        />)}
+                        />} )}
                 </ul>
-                <More />
+                {props.isMore ? (
+                    <More
+                    moviesToWidth = {props.moviesToWidth}
+                    setMoviesToWidth = {props.setMoviesToWidth}
+                />
+                ) : (<></>)}
+                
             </div>
             )}
         </section>

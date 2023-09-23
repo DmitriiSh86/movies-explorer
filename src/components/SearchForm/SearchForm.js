@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import {dataBaseGet} from '../../utils/MoviesApi'
 
-function SearchForm({setMovies, setIsLoading}) {
+function SearchForm({setMoviesFound, setIsLoading}) {
     const [formValue, setFormValue] = useState({
         searchFilm: ''
     });
@@ -18,13 +18,25 @@ function SearchForm({setMovies, setIsLoading}) {
     const findSubmit = (evt) => {
         evt.preventDefault();
         setIsLoading(true);
-        dataBaseGet()
-        .then((result) => {
-            console.log(result)
-            setMovies(result);
+        const wordToFind = formValue.searchFilm.toLowerCase();
+        const localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
+        if (localStorageMoviesBase ===null){
+            dataBaseGet()
+            .then((result) => {   
+            console.log('Запрос на сервер')         
+            localStorage.setItem('moviesBase', JSON.stringify(result));
+            setMoviesFound(result);
             setIsLoading(false);
         })
-        .catch(err => console.log(`Ошибка.....: ${err}`))        
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+        }
+
+        let moviesFind = localStorageMoviesBase.filter(function(movie) {
+            return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
+        });
+        console.log(moviesFind)
+        setMoviesFound(moviesFind);
+        setIsLoading(false);
     }
 
     return(

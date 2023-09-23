@@ -19,6 +19,7 @@ import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
 import {profileGet, moviesGet, moviesPost, moviesDelete, profilePatch} from "../../utils/MainApi"
+import { useResize } from "../../utils/useResize"
 
 const DATA_BASE_URL = 'https://api.nomoreparties.co'
 
@@ -29,8 +30,12 @@ function App() {
     const [isPopupOpen, setIsPopupOpen] = useState(false)
 
     const [currentUser, setCurrentUser] = useState({});
-    const [movies, setMovies] = useState([]);
+
     const [moviesSaved, setMoviesSaved] = useState([]);
+
+    const [moviesFound, setMoviesFound] = useState([]);
+
+    const [moviesToDrow, setMoviesToDrow] = useState([]);
 
     
     const [isLoading, setIsLoading] = useState(false)
@@ -41,6 +46,10 @@ function App() {
     const [isOk, setIsOk] = useState({status: false, message: ''})
 
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
+
+    const [isMore, setIsMore] = useState(true)
+
+    
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -138,6 +147,46 @@ function App() {
       // eslint-disable-next-line
     }, [])
 
+    const {width} = useResize();
+    const [moviesToWidth, setMoviesToWidth] = useState({all: Number, row: Number});
+
+    function updateMoviesToWidth(width) {
+      if (width > 1100) 
+        {setMoviesToWidth({all: 16, row: 4})}
+      if ((width > 800) && (width <= 1100)) 
+        {setMoviesToWidth({all: 12, row: 3})}
+      if ((width > 500) && (width < 800)) 
+        {setMoviesToWidth({all: 8, row: 2})}
+      if (width <= 500) 
+        {setMoviesToWidth({all: 5, row: 2})}
+      return
+    }
+
+    useEffect(() => {
+      updateMoviesToWidth(width);      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [width]);
+
+    useEffect(() => {
+      if (moviesToWidth.all >= moviesFound.length){
+        setIsMore(false)
+      } else {
+        setIsMore(true)
+      }
+      
+    },[moviesToWidth.all, moviesFound.length]);
+
+    useEffect(() => {
+      if (isShortMovies === true) {
+        let moviesShort = moviesFound.filter(function(movie) {
+          return (movie.duration < 40);
+        });
+        setMoviesToDrow(moviesShort.slice(0, moviesToWidth.all))
+      } else {
+      setMoviesToDrow(moviesFound.slice(0, moviesToWidth.all))
+      }
+    },[moviesToWidth.all, moviesFound, isShortMovies]);
+
 
     return (
       <div className="app">
@@ -165,8 +214,8 @@ function App() {
                   />
                   <ProtectedRoute element={Movies}
                     isLoggedIn = {isLoggedIn}
-                    moviesData={movies}
-                    setMovies = {setMovies}
+                    moviesFound={moviesFound}
+                    setMoviesFound = {setMoviesFound}
                     moviesSaved = {moviesSaved}
                     moviesHandleLike = {moviesHandleLike}
                     moviesHandleDelete = {moviesHandleDelete}
@@ -174,6 +223,10 @@ function App() {
                     setIsLoading = {setIsLoading}
                     isShortMovies = {isShortMovies}
                     setIsShortMovies = {setIsShortMovies}
+                    moviesToWidth = {moviesToWidth}
+                    setMoviesToWidth = {setMoviesToWidth}
+                    isMore = {isMore}
+                    moviesToDrow = {moviesToDrow}
                   />
                   <Footer />
                 </>

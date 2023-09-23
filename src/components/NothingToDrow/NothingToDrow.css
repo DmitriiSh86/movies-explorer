@@ -1,0 +1,16 @@
+.nothing-to-drow{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nothing-to-drow__text{
+    margin: 0 0 100px 0;
+    padding: 0;
+    color: black;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 500;
+}

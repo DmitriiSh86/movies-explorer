@@ -8,13 +8,36 @@ import likeButtonActiv from '../../images/like-activ.svg'
 import likeButtonNotActiv from '../../images/like-not-activ.svg'
 import Preloader from '../Preloader/Preloader'
 
+import {dataBaseGet} from '../../utils/MoviesApi'
+
 function Movies(props) {
+
+    function handleSearch(wordToFind){
+        
+        props.setIsLoading(true);
+        const localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
+        if (localStorageMoviesBase ===null){
+            dataBaseGet()
+            .then((result) => {   
+            console.log('Запрос на сервер')         
+            localStorage.setItem('moviesBase', JSON.stringify(result));
+            props.setIsLoading(false);
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+        }
+
+        let moviesFind = localStorageMoviesBase.filter(function(movie) {
+            return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
+        });
+        console.log(moviesFind)
+        props.setMoviesFound(moviesFind);
+        props.setIsLoading(false);
+    }
 
     return(
         <section className="movies">
             <SearchForm
-                setMoviesFound = {props.setMoviesFound}
-                setIsLoading = {props.setIsLoading}
+                handleSearch = {handleSearch}
             />
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMovies}
@@ -38,6 +61,7 @@ function Movies(props) {
                             moviesHandleLike = {props.moviesHandleLike}
                             moviesHandleDelete = {props.moviesHandleDelete}
                             moviesSaved = {props.moviesSaved}
+                            trailerLink = {movie.trailerLink}
                         />} )}
                 </ul>
                 {props.isMore ? (

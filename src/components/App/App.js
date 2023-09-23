@@ -35,7 +35,11 @@ function App() {
 
     const [moviesFound, setMoviesFound] = useState([]);
 
+    const [moviesFoundSaved, setMoviesFoundSaved] = useState([]);
+
     const [moviesToDrow, setMoviesToDrow] = useState([]);
+
+    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
 
     
     const [isLoading, setIsLoading] = useState(false)
@@ -119,8 +123,8 @@ function App() {
         Promise.all([profileGet(), moviesGet()])
         .then(([userData, moviesData]) => {
           setCurrentUser(userData.data);
-          setMoviesSaved(moviesData.data);
-          console.log('hello')
+          setMoviesSaved(moviesData.data);          
+          localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       }
@@ -163,18 +167,19 @@ function App() {
     }
 
     useEffect(() => {
-      updateMoviesToWidth(width);      
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      updateMoviesToWidth(width);
     }, [width]);
 
     useEffect(() => {
-      if (moviesToWidth.all >= moviesFound.length){
+      console.log(moviesToDrow.length)
+      console.log(moviesFound.length)
+      if (moviesToDrow.length >= moviesFound.length){
         setIsMore(false)
       } else {
         setIsMore(true)
       }
       
-    },[moviesToWidth.all, moviesFound.length]);
+    },[moviesToDrow, moviesFound.length]);
 
     useEffect(() => {
       if (isShortMovies === true) {
@@ -186,6 +191,18 @@ function App() {
       setMoviesToDrow(moviesFound.slice(0, moviesToWidth.all))
       }
     },[moviesToWidth.all, moviesFound, isShortMovies]);
+
+    useEffect(() => {
+      if (isShortMoviesSaved === true) {
+        let moviesShort = moviesSaved.filter(function(movie) {
+          return (movie.duration < 40);
+        });
+        setMoviesSaved(moviesShort)
+      } else {
+        setMoviesSaved(JSON.parse(localStorage.getItem('moviesSavedBase')))
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[isShortMoviesSaved]);
 
 
     return (
@@ -239,10 +256,14 @@ function App() {
                   />
                   <ProtectedRoute element={SavedMovies}
                     isLoggedIn = {isLoggedIn}
-                    moviesData={moviesSaved}
+                    moviesSaved = {moviesSaved}
+                    setMoviesSaved = {setMoviesSaved}
+                    moviesSavedToDrow={moviesSavedToDrow}
                     moviesHandleDelete = {moviesHandleDelete}
                     isShortMoviesSaved = {isShortMoviesSaved}
                     setIsShortMoviesSaved = {setIsShortMoviesSaved}
+                    setIsLoading = {setIsLoading}
+                    setMoviesFoundSaved = {setMoviesFoundSaved}
                   />
                   <Footer />
                 </>

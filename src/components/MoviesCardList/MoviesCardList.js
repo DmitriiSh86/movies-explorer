@@ -1,4 +1,5 @@
 import {React} from "react";
+import { Link } from "react-router-dom";
 
 function MoviesCardList({
     iconActivButton,
@@ -9,7 +10,8 @@ function MoviesCardList({
     moviesHandleLike,
     moviesHandleDelete,
     movie,
-    moviesSaved
+    moviesSaved,
+    trailerLink
     }) 
     {
 
@@ -46,15 +48,14 @@ function MoviesCardList({
 
     function handleDeleteClick(){
         moviesHandleDelete(movie);
+        console.log(movie)
         isLiked = false;
     }
-
     return(
         <li className="movies-card-list__container">
-            <img className="movies-card-list__photo"
-            alt={nameRU} 
-            src={image}
-            />
+            <Link to={trailerLink} target="_blank">
+                <img className="movies-card-list__photo" alt={nameRU} src={image} />
+            </Link>            
             <div className="movies-card-list__bar">
                 <h2 className="movies-card-list__title">{nameRU}</h2>
                 {isSaved !== undefined ? (

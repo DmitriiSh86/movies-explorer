@@ -9,7 +9,7 @@ import NothingToDrow from "../NothingToDrow/NothingToDrow";
 function SavedMovies(props) {
 
     function handleSearch(wordToFind){
-        localStorage.setItem('moviesSavedPlaceholder', JSON.stringify(wordToFind));
+        localStorage.setItem('moviesSavedPlaceholder', wordToFind);
         props.setMoviesSavedPlaceholder(localStorage.getItem('moviesSavedPlaceholder'))
         let localStorageMoviesSavedBase = JSON.parse(localStorage.getItem('moviesSavedBase'));
         if (wordToFind === ''){

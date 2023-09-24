@@ -14,7 +14,7 @@ function Movies(props) {
 
     async function handleSearch(wordToFind){
         props.setIsLoading(true);
-        localStorage.setItem('moviesPlaceholder', JSON.stringify(wordToFind));
+        localStorage.setItem('moviesPlaceholder', wordToFind);
         props.setMoviesPlaceholder(localStorage.getItem('moviesPlaceholder'))
         let localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
         if (localStorageMoviesBase === null){

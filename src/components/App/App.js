@@ -35,8 +35,8 @@ function App() {
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
     
 
-    const [moviesPlaceholder, setMoviesPlaceholder] = useState('');
-    const [moviesSavedPlaceholder, setMoviesSavedPlaceholder] = useState('');
+    const [moviesPlaceholder, setMoviesPlaceholder] = useState((localStorage.getItem('moviesPlaceholder')) || '');
+    const [moviesSavedPlaceholder, setMoviesSavedPlaceholder] = useState(localStorage.getItem('moviesSavedPlaceholder') || '');
     
     const [moviesFound, setMoviesFound] = useState(JSON.parse(localStorage.getItem('moviesFound')) || []);
     const [moviesToDrow, setMoviesToDrow] = useState([]);
@@ -50,10 +50,7 @@ function App() {
     const [moviesSaved, setMoviesSaved] = useState([]);
     const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedSwitcherStatus')) || false);
 
-    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState(
-      JSON.parse(localStorage.getItem('moviesSavedFound')) || 
-      JSON.parse(localStorage.getItem('moviesSavedBase'))
-      );
+    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
 
     const [moviesFoundSaved, setMoviesFoundSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedFound')));
 

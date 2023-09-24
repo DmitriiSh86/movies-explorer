@@ -6,6 +6,8 @@ import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
 import iconButtonDelete from '../../images/like-delete.svg'
 import NothingToDrow from "../NothingToDrow/NothingToDrow";
 
+import { moviesGet, moviesDelete } from "../../utils/MainApi"
+
 function SavedMovies(props) {
 
     function handleSearch(wordToFind){
@@ -26,7 +28,21 @@ function SavedMovies(props) {
             props.setIsLoading(false);
         }
     }
-        
+
+    function moviesSavedHandleDelete(movie){
+        moviesDelete(movie._id)
+        .then((data) => {
+            const newMoviesSavedFound = props.moviesSavedToDrow.filter((elem) => elem._id !== movie._id);
+            props.setMoviesFoundSaved(newMoviesSavedFound)
+            moviesGet()
+            .then((data) => {
+                props.setMoviesSaved(data.data)
+                localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
+            })
+            .catch(err => console.log(`Ошибка.....: ${err}`))
+        })
+        .catch(err => console.log(`Ошибка.....: ${err}`))
+    }
 
     return(
         <section className="movies-saved">
@@ -39,19 +55,23 @@ function SavedMovies(props) {
                 setIsShortMovies = {props.setIsShortMoviesSaved}
                 localStorageName = 'moviesSavedSwitcherStatus'
             />
+            {((props.moviesSavedToDrow === null) || (props.moviesSavedToDrow.length === 0)) ? (
+                <NothingToDrow />
+            ) : (
             <ul aria-label="photo" className="movies-saved__container">
-                {(props.moviesSavedToDrow !== null) ? props.moviesSavedToDrow.map((movie) => 
+                {props.moviesSavedToDrow.map((movie) => 
                     <MoviesCardList
                         key={movie._id}
                         movie = {movie}
                         iconNotActivButton={iconButtonDelete}
-                        moviesHandleDelete = {props.moviesHandleDelete}
+                        moviesHandleDelete = {moviesSavedHandleDelete}
                         trailerLink = {movie.trailer}
                         nameRU = {movie.nameRU}
                         image = {movie.image}
                         duration = {movie.duration}
-                    />) : <NothingToDrow />}
-            </ul> 
+                    />
+                )}
+            </ul>)}
         </section>
     )
 }

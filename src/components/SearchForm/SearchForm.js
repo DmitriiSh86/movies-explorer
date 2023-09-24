@@ -4,9 +4,7 @@ function SearchForm({handleSearch, placeholder}) {
     const [formValue, setFormValue] = useState({
         searchFilm: ''
     });
-
     
-
     const handleChange = (evt) => {
         const {name, value} = evt.target;
         setFormValue({

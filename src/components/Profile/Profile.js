@@ -53,6 +53,8 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
             localStorage.removeItem('moviesSavedSwitcherStatus');
             localStorage.removeItem('moviesFound');
             localStorage.removeItem('moviesSavedFound');
+            localStorage.removeItem('moviesSavedPlaceholder');
+            localStorage.removeItem('moviesPlaceholder');
             setMovies([]);
             navigate('/');
         })

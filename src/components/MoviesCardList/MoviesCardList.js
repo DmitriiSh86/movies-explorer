@@ -18,6 +18,7 @@ function MoviesCardList({
     let isLiked = false;
     const isSaved = movie._id;
     let movieWithId;
+    const time = durationConvert(duration)
     
     if (isSaved === undefined){
         movieWithId = moviesSaved.find(element => element.movieId === movie.id)
@@ -27,7 +28,6 @@ function MoviesCardList({
             isLiked = false;
         }
     }
-    
 
     function toggleButton(){
         if (isLiked === true) {
@@ -44,12 +44,12 @@ function MoviesCardList({
         let minutes = min % 60;
         return hours + 'ч ' + minutes + 'м';
     }
-    const time = durationConvert(duration)
 
     function handleDeleteClick(){
         moviesHandleDelete(movie);
         isLiked = false;
     }
+
     return(
         <li className="movies-card-list__container">
             <Link to={trailerLink} target="_blank">
@@ -65,7 +65,6 @@ function MoviesCardList({
                         <img src ={!isLiked ? iconNotActivButton : iconActivButton} alt="Like" className="movies-card-list__like-activ"/>
                     </button>
                 )}
-                
             </div>
             <div className="movies-card-list__border"></div>
             <p className="movies-card-list__duration">{time}</p>

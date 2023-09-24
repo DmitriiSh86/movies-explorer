@@ -44,16 +44,12 @@ function App() {
 
     const [isMore, setIsMore] = useState(true)
 
-
-
-
     const [moviesSaved, setMoviesSaved] = useState([]);
     const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedSwitcherStatus')) || false);
 
     const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
 
     const [moviesFoundSaved, setMoviesFoundSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedFound')));
-
 
     useEffect(() => {
       if (isShortMoviesSaved === true) {
@@ -66,10 +62,6 @@ function App() {
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isShortMoviesSaved, moviesFoundSaved]);
-
-
-
-    
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -134,8 +126,6 @@ function App() {
         setIsInfoTooltipOpen(true);
     }
 
-    
-
     useEffect(() => {
       if (isLoggedIn){
         profileGet()
@@ -166,8 +156,6 @@ function App() {
       checkToken();
       // eslint-disable-next-line
     }, [])
-
-
 
     const {width} = useResize();
     const [moviesToWidth, setMoviesToWidth] = useState({all: Number, row: Number});
@@ -207,9 +195,6 @@ function App() {
       setMoviesToDrow(moviesFound.slice(0, moviesToWidth.all))
       }
     },[moviesToWidth.all, moviesFound, isShortMovies]);
-
-    
-
 
     return (
       <div className="app">
@@ -275,7 +260,6 @@ function App() {
                     setIsLoading = {setIsLoading}
                     moviesSavedPlaceholder = {moviesSavedPlaceholder}
                     setMoviesSavedPlaceholder = {setMoviesSavedPlaceholder}
-                    
                   />
                   <Footer />
                 </>

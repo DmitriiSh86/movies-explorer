@@ -12,8 +12,10 @@ import {dataBaseGet} from '../../utils/MoviesApi'
 
 function Movies(props) {
 
-    async function handleSearch(wordToFind){  
+    async function handleSearch(wordToFind){
         props.setIsLoading(true);
+        localStorage.setItem('moviesPlaceholder', JSON.stringify(wordToFind));
+        props.setMoviesPlaceholder(localStorage.getItem('moviesPlaceholder'))
         let localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
         if (localStorageMoviesBase === null){
             await dataBaseGet()
@@ -39,6 +41,7 @@ function Movies(props) {
         <section className="movies">
             <SearchForm
                 handleSearch = {handleSearch}
+                placeholder = {props.moviesPlaceholder}
             />
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMovies}

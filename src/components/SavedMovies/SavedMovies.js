@@ -9,7 +9,9 @@ import NothingToDrow from "../NothingToDrow/NothingToDrow";
 function SavedMovies(props) {
 
     function handleSearch(wordToFind){
-        const localStorageMoviesSavedBase = JSON.parse(localStorage.getItem('moviesSavedBase'));
+        localStorage.setItem('moviesSavedPlaceholder', JSON.stringify(wordToFind));
+        props.setMoviesSavedPlaceholder(localStorage.getItem('moviesSavedPlaceholder'))
+        let localStorageMoviesSavedBase = JSON.parse(localStorage.getItem('moviesSavedBase'));
         if (wordToFind === ''){
             props.setMoviesFoundSaved(localStorageMoviesSavedBase);
             
@@ -31,6 +33,7 @@ function SavedMovies(props) {
         <section className="movies-saved">
             <SearchForm
                 handleSearch = {handleSearch}
+                placeholder = {props.moviesSavedPlaceholder}
             />
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMoviesSaved}

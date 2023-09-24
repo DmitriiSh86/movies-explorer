@@ -35,7 +35,8 @@ function App() {
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
     
 
-    
+    const [moviesPlaceholder, setMoviesPlaceholder] = useState('');
+    const [moviesSavedPlaceholder, setMoviesSavedPlaceholder] = useState('');
     
     const [moviesFound, setMoviesFound] = useState(JSON.parse(localStorage.getItem('moviesFound')) || []);
     const [moviesToDrow, setMoviesToDrow] = useState([]);
@@ -254,6 +255,8 @@ function App() {
                     setMoviesToWidth = {setMoviesToWidth}
                     isMore = {isMore}
                     moviesToDrow = {moviesToDrow}
+                    moviesPlaceholder = {moviesPlaceholder}
+                    setMoviesPlaceholder = {setMoviesPlaceholder}
                   />
                   <Footer />
                 </>
@@ -275,6 +278,8 @@ function App() {
                     isShortMoviesSaved = {isShortMoviesSaved}
                     setIsShortMoviesSaved = {setIsShortMoviesSaved}
                     setIsLoading = {setIsLoading}
+                    moviesSavedPlaceholder = {moviesSavedPlaceholder}
+                    setMoviesSavedPlaceholder = {setMoviesSavedPlaceholder}
                     
                   />
                   <Footer />

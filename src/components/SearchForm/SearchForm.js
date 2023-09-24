@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
-function SearchForm({handleSearch}) {
+function SearchForm({handleSearch, placeholder}) {
     const [formValue, setFormValue] = useState({
         searchFilm: ''
     });
+
+    
 
     const handleChange = (evt) => {
         const {name, value} = evt.target;
@@ -25,7 +27,7 @@ function SearchForm({handleSearch}) {
                     onChange={handleChange} 
                     id='searchFilm'
                     name='searchFilm'
-                    placeholder="Фильм"
+                    placeholder= {placeholder}
                     className="search-form__input"
                     value={formValue.searchFilm}
                     >

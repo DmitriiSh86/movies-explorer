@@ -1,6 +1,6 @@
 import './App.css';
 import { React, useState, useEffect } from "react";
-import { Route, Routes, useNavigate} from 'react-router-dom'
+import { Route, Routes} from 'react-router-dom'
 
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
@@ -24,34 +24,52 @@ import { useResize } from "../../utils/useResize"
 const DATA_BASE_URL = 'https://api.nomoreparties.co'
 
 function App() {
-    const navigate = useNavigate();
     // eslint-disable-next-line no-unused-vars
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [isPopupOpen, setIsPopupOpen] = useState(false)
 
     const [currentUser, setCurrentUser] = useState({});
-
-    const [moviesSaved, setMoviesSaved] = useState([]);
-
-    const [moviesFound, setMoviesFound] = useState([]);
-
-    const [moviesFoundSaved, setMoviesFoundSaved] = useState([]);
-
-    const [moviesToDrow, setMoviesToDrow] = useState([]);
-
-    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
-
-    
     const [isLoading, setIsLoading] = useState(false)
 
-    const [isShortMovies, setIsShortMovies] = useState(false);
-    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
-
     const [isOk, setIsOk] = useState({status: false, message: ''})
-
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
+    
+
+    
+    
+    const [moviesFound, setMoviesFound] = useState(JSON.parse(localStorage.getItem('moviesFound')) || []);
+    const [moviesToDrow, setMoviesToDrow] = useState([]);
+    const [isShortMovies, setIsShortMovies] = useState(JSON.parse(localStorage.getItem('moviesSwitcherStatus')) || false);
 
     const [isMore, setIsMore] = useState(true)
+
+
+
+
+    const [moviesSaved, setMoviesSaved] = useState([]);
+    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedSwitcherStatus')) || false);
+
+    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState(
+      JSON.parse(localStorage.getItem('moviesSavedFound')) || 
+      JSON.parse(localStorage.getItem('moviesSavedBase'))
+      );
+
+    const [moviesFoundSaved, setMoviesFoundSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedFound')));
+
+
+    useEffect(() => {
+      if (isShortMoviesSaved === true) {
+        let moviesShort = moviesFoundSaved.filter(function(movie) {
+          return (movie.duration < 40);
+        });
+        setMoviesSavedToDrow(moviesShort)
+      } else {
+        setMoviesSavedToDrow(moviesFoundSaved)
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[isShortMoviesSaved, moviesFoundSaved]);
+
+
 
     
 
@@ -85,6 +103,7 @@ function App() {
         moviesGet()
         .then((data) => {
           setMoviesSaved(data.data)
+          localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       })
@@ -97,6 +116,7 @@ function App() {
         moviesGet()
         .then((data) => {
           setMoviesSaved(data.data)
+          localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       })
@@ -120,15 +140,14 @@ function App() {
 
     useEffect(() => {
       if (isLoggedIn){
-        Promise.all([profileGet(), moviesGet()])
-        .then(([userData, moviesData]) => {
+        profileGet()
+        .then((userData) => {
           setCurrentUser(userData.data);
-          setMoviesSaved(moviesData.data);          
-          localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       }
       
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isLoggedIn]);
 
     const checkToken = () => {
@@ -138,7 +157,6 @@ function App() {
           return
         }        
         setIsLoggedIn(true);
-        navigate('/')
       })
       .catch((error) => {
         console.log(error.message);
@@ -150,6 +168,8 @@ function App() {
       checkToken();
       // eslint-disable-next-line
     }, [])
+
+
 
     const {width} = useResize();
     const [moviesToWidth, setMoviesToWidth] = useState({all: Number, row: Number});
@@ -171,8 +191,6 @@ function App() {
     }, [width]);
 
     useEffect(() => {
-      console.log(moviesToDrow.length)
-      console.log(moviesFound.length)
       if (moviesToDrow.length >= moviesFound.length){
         setIsMore(false)
       } else {
@@ -187,22 +205,14 @@ function App() {
           return (movie.duration < 40);
         });
         setMoviesToDrow(moviesShort.slice(0, moviesToWidth.all))
+        console.log('true')
       } else {
       setMoviesToDrow(moviesFound.slice(0, moviesToWidth.all))
+      console.log('false')
       }
     },[moviesToWidth.all, moviesFound, isShortMovies]);
 
-    useEffect(() => {
-      if (isShortMoviesSaved === true) {
-        let moviesShort = moviesSaved.filter(function(movie) {
-          return (movie.duration < 40);
-        });
-        setMoviesSaved(moviesShort)
-      } else {
-        setMoviesSaved(JSON.parse(localStorage.getItem('moviesSavedBase')))
-      }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isShortMoviesSaved]);
+    
 
 
     return (
@@ -258,12 +268,14 @@ function App() {
                     isLoggedIn = {isLoggedIn}
                     moviesSaved = {moviesSaved}
                     setMoviesSaved = {setMoviesSaved}
+                    setMoviesFoundSaved = {setMoviesFoundSaved}
                     moviesSavedToDrow={moviesSavedToDrow}
+                    setMoviesSavedToDrow={setMoviesSavedToDrow}
                     moviesHandleDelete = {moviesHandleDelete}
                     isShortMoviesSaved = {isShortMoviesSaved}
                     setIsShortMoviesSaved = {setIsShortMoviesSaved}
                     setIsLoading = {setIsLoading}
-                    setMoviesFoundSaved = {setMoviesFoundSaved}
+                    
                   />
                   <Footer />
                 </>
@@ -287,6 +299,9 @@ function App() {
                     setIsOk={setIsOk}
                     setIsLoggedIn = {setIsLoggedIn}
                     setIsInfoTooltipOpen={setIsInfoTooltipOpen}
+                    setMoviesSaved = {setMoviesSaved}
+                    setMoviesFound = {setMoviesFound}
+                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
                   />
                 </>
               }/>
@@ -296,6 +311,10 @@ function App() {
                     setIsLoggedIn = {setIsLoggedIn}
                     setIsOk={setIsOk}
                     setIsInfoTooltipOpen={setIsInfoTooltipOpen}
+                    moviesSaved = {moviesSaved}
+                    setMoviesSaved = {setMoviesSaved}
+                    setMoviesFound = {setMoviesFound}
+                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
                   />
                 </>
               }/>

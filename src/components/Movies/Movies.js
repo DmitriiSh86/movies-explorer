@@ -12,15 +12,15 @@ import {dataBaseGet} from '../../utils/MoviesApi'
 
 function Movies(props) {
 
-    function handleSearch(wordToFind){
-        
+    async function handleSearch(wordToFind){  
         props.setIsLoading(true);
-        const localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
-        if (localStorageMoviesBase ===null){
-            dataBaseGet()
+        let localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
+        if (localStorageMoviesBase === null){
+            await dataBaseGet()
             .then((result) => {   
-            console.log('Запрос на сервер')         
+            console.log('Запрос на сервер')
             localStorage.setItem('moviesBase', JSON.stringify(result));
+            localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
             props.setIsLoading(false);
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
@@ -29,6 +29,7 @@ function Movies(props) {
         let moviesFind = localStorageMoviesBase.filter(function(movie) {
             return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
         });
+        localStorage.setItem('moviesFound', JSON.stringify(moviesFind));
         console.log(moviesFind)
         props.setMoviesFound(moviesFind);
         props.setIsLoading(false);
@@ -42,6 +43,7 @@ function Movies(props) {
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMovies}
                 setIsShortMovies = {props.setIsShortMovies}
+                localStorageName = 'moviesSwitcherStatus'
             />
             {props.isLoading === true ? (
                 <Preloader /> ) : props.moviesFound.length === 0 ? (

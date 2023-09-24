@@ -3,7 +3,9 @@ import { useNavigate, Link } from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signup, signin} from "../../utils/MainApi"
 
-function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen}) {
+import {moviesGet} from "../../utils/MainApi"
+
+function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound, setMoviesSaved, setMoviesSavedToDrow}) {
     const navigate = useNavigate();
 
     const [formValue, setFormValue] = useState({
@@ -37,10 +39,7 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen}) {
                 validMessage: evt.target.validationMessage
             }
         })
-    }
-
-
-    
+    }    
 
     const [isProccessing, setIsProccessing] = useState('Зарегистрироваться');
 
@@ -52,9 +51,18 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen}) {
             signin(formValue.email.value, formValue.password.value)
             .then((data) => {
                 setIsLoggedIn(true);
+                setMoviesFound([])
                 setIsOk({status: true, message: 'Вы успешно зарегистрировались'});
                 setIsInfoTooltipOpen(true)
                 navigate('/movies');
+                moviesGet()
+                .then((moviesData) => {
+                    setMoviesSaved(moviesData.data);
+                    setMoviesSavedToDrow(moviesData.data);
+                    console.log('перелогинивание')
+                    localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
+                })
+                .catch(err => console.log(`Ошибка.....: ${err}`))
             })
             .catch((error) => {
                 setIsOk({status: false, message: 'Вы успешно зарегистрировались, но не получается залогиниться...'});

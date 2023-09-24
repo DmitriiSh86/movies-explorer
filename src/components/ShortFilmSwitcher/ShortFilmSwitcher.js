@@ -1,12 +1,14 @@
 import React from "react";
 
-function ShortFilmSwitcher({isShortMovies, setIsShortMovies}) {
+function ShortFilmSwitcher({isShortMovies, setIsShortMovies, localStorageName}) {
     
     function toggleSwitcher(){
         if (isShortMovies === true){
             setIsShortMovies(false)
+            localStorage.setItem(localStorageName, JSON.stringify(false));
         } else {
             setIsShortMovies(true)
+            localStorage.setItem(localStorageName, JSON.stringify(true));
         }
     }
 

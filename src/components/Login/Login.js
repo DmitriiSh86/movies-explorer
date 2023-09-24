@@ -3,7 +3,9 @@ import {Link, useNavigate} from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signin} from "../../utils/MainApi"
 
-function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen}) {
+import {moviesGet} from "../../utils/MainApi"
+
+function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToDrow, moviesSaved, setMoviesSaved, setMoviesFound}) {
     const navigate = useNavigate();
     const [formValue, setFormValue] = useState({
         email: {
@@ -41,9 +43,19 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen}) {
         signin(formValue.email.value, formValue.password.value)
         .then((data) => {
             setIsLoggedIn(true);
+            setMoviesFound([])
             setIsOk({status: true, message: 'Вы успешно авторизировались'});
             setIsInfoTooltipOpen(true)
-            navigate('/');
+            navigate('/movies');
+            moviesGet()
+            .then((moviesData) => {
+                setMoviesSaved(moviesData.data);
+                setMoviesSavedToDrow(moviesData.data);
+                console.log('перелогинивание')
+                localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
+            })
+            .catch(err => console.log(`Ошибка.....: ${err}`))
+            
         })
         .catch((error) => {
             setIsOk({status: false, message: 'Что-то пошло не так...'});

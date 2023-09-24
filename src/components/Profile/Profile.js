@@ -48,6 +48,11 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
         .then((data) => {
             setIsLoggedIn(false);
             localStorage.removeItem('moviesBase');
+            localStorage.removeItem('moviesSavedBase');
+            localStorage.removeItem('moviesSwitcherStatus');
+            localStorage.removeItem('moviesSavedSwitcherStatus');
+            localStorage.removeItem('moviesFound');
+            localStorage.removeItem('moviesSavedFound');
             setMovies([]);
             navigate('/');
         })

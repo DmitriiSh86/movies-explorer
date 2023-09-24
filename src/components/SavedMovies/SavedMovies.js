@@ -4,6 +4,7 @@ import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
 import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
 import iconButtonDelete from '../../images/like-delete.svg'
+import NothingToDrow from "../NothingToDrow/NothingToDrow";
 
 function SavedMovies(props) {
 
@@ -11,17 +12,20 @@ function SavedMovies(props) {
         const localStorageMoviesSavedBase = JSON.parse(localStorage.getItem('moviesSavedBase'));
         if (wordToFind === ''){
             props.setMoviesFoundSaved(localStorageMoviesSavedBase);
+            
+            localStorage.setItem('moviesSavedFound', JSON.stringify(localStorageMoviesSavedBase));
+            console.log('привет')
         } else {
             props.setIsLoading(true);            
             let moviesFind = localStorageMoviesSavedBase.filter(function(movie) {
                 return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
             });
             localStorage.setItem('moviesSavedFound', JSON.stringify(moviesFind));
-            console.log(moviesFind)
-            props.setMoviesSaved(moviesFind);
+            props.setMoviesFoundSaved(moviesFind);
             props.setIsLoading(false);
-            }
         }
+    }
+        
 
     return(
         <section className="movies-saved">
@@ -31,9 +35,10 @@ function SavedMovies(props) {
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMoviesSaved}
                 setIsShortMovies = {props.setIsShortMoviesSaved}
+                localStorageName = 'moviesSavedSwitcherStatus'
             />
             <ul aria-label="photo" className="movies-saved__container">
-                {props.moviesSaved.map((movie) => 
+                {(props.moviesSavedToDrow !== null) ? props.moviesSavedToDrow.map((movie) => 
                     <MoviesCardList
                         key={movie._id}
                         movie = {movie}
@@ -43,7 +48,7 @@ function SavedMovies(props) {
                         nameRU = {movie.nameRU}
                         image = {movie.image}
                         duration = {movie.duration}
-                    />)}
+                    />) : <NothingToDrow />}
             </ul> 
         </section>
     )

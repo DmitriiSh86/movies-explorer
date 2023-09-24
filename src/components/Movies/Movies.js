@@ -19,8 +19,7 @@ function Movies(props) {
         let localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
         if (localStorageMoviesBase === null){
             await dataBaseGet()
-            .then((result) => {   
-            console.log('Запрос на сервер')
+            .then((result) => {
             localStorage.setItem('moviesBase', JSON.stringify(result));
             localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
             props.setIsLoading(false);
@@ -32,7 +31,6 @@ function Movies(props) {
             return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
         });
         localStorage.setItem('moviesFound', JSON.stringify(moviesFind));
-        console.log(moviesFind)
         props.setMoviesFound(moviesFind);
         props.setIsLoading(false);
     }

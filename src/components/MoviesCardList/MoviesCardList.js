@@ -48,7 +48,6 @@ function MoviesCardList({
 
     function handleDeleteClick(){
         moviesHandleDelete(movie);
-        console.log(movie)
         isLiked = false;
     }
     return(

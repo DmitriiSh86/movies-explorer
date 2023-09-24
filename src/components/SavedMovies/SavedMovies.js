@@ -16,7 +16,6 @@ function SavedMovies(props) {
             props.setMoviesFoundSaved(localStorageMoviesSavedBase);
             
             localStorage.setItem('moviesSavedFound', JSON.stringify(localStorageMoviesSavedBase));
-            console.log('привет')
         } else {
             props.setIsLoading(true);            
             let moviesFind = localStorageMoviesSavedBase.filter(function(movie) {

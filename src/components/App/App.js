@@ -206,10 +206,8 @@ function App() {
           return (movie.duration < 40);
         });
         setMoviesToDrow(moviesShort.slice(0, moviesToWidth.all))
-        console.log('true')
       } else {
       setMoviesToDrow(moviesFound.slice(0, moviesToWidth.all))
-      console.log('false')
       }
     },[moviesToWidth.all, moviesFound, isShortMovies]);
 

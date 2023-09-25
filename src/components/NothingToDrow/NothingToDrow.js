@@ -1,10 +1,10 @@
 import React from "react";
 
 
-function NothingToDrow() {
+function NothingToDrow({text}) {
     return(
         <section className="nothing-to-drow">
-            <p className="nothing-to-drow__text">Ничего не найдено</p>
+            <p className="nothing-to-drow__text">{text}</p>
         </section>
     )
 }

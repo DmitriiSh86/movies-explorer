@@ -21,7 +21,22 @@ import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 import {profileGet, moviesGet, moviesPost, moviesDelete, profilePatch} from "../../utils/MainApi"
 import { useResize } from "../../utils/useResize"
 
-const DATA_BASE_URL = 'https://api.nomoreparties.co'
+const {
+    DURATION,
+    WIDTH_M,
+    WIDTH_L,
+    WIDTH_XL,
+    MOVIES_TOTAL_S,
+    MOVIES_TOTAL_M,
+    MOVIES_TOTAL_L,
+    MOVIES_TOTAL_XL,
+    MOVIES_ROW_M,
+    MOVIES_ROW_L,
+    MOVIES_ROW_XL,
+    DATA_BASE_URL
+  } = require('../../utils/const');
+
+
 
 function App() {
     // eslint-disable-next-line no-unused-vars
@@ -35,8 +50,7 @@ function App() {
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false)
     
 
-    const [moviesPlaceholder, setMoviesPlaceholder] = useState((localStorage.getItem('moviesPlaceholder')) || '');
-    const [moviesSavedPlaceholder, setMoviesSavedPlaceholder] = useState(localStorage.getItem('moviesSavedPlaceholder') || '');
+    const [formValueFound, setFormValueFound] = useState((localStorage.getItem('moviesPlaceholder')) || '');
     
     const [moviesFound, setMoviesFound] = useState(JSON.parse(localStorage.getItem('moviesFound')) || []);
     const [moviesToDrow, setMoviesToDrow] = useState([]);
@@ -44,24 +58,27 @@ function App() {
 
     const [isMore, setIsMore] = useState(true)
 
+
+
     const [moviesSaved, setMoviesSaved] = useState([]);
-    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedSwitcherStatus')) || false);
+
+    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
 
     const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
 
-    const [moviesFoundSaved, setMoviesFoundSaved] = useState(JSON.parse(localStorage.getItem('moviesSavedFound')));
+    const [moviesFoundSaved, setMoviesFoundSaved] = useState(moviesSaved);
 
     useEffect(() => {
       if (isShortMoviesSaved === true) {
-        let moviesShort = moviesFoundSaved.filter(function(movie) {
-          return (movie.duration < 40);
+        let moviesShort = moviesSaved.filter(function(movie) {
+          return (movie.duration < DURATION);
         });
         setMoviesSavedToDrow(moviesShort)
-      } else {
-        setMoviesSavedToDrow(moviesFoundSaved)
-      }
+        } else {
+          setMoviesSavedToDrow(moviesSaved)
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isShortMoviesSaved, moviesFoundSaved]);
+    },[isShortMoviesSaved, moviesSaved]);
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -93,7 +110,6 @@ function App() {
         moviesGet()
         .then((data) => {
           setMoviesSaved(data.data)
-          localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       })
@@ -106,7 +122,6 @@ function App() {
         moviesGet()
         .then((data) => {
           setMoviesSaved(data.data)
-          localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       })
@@ -128,14 +143,15 @@ function App() {
 
     useEffect(() => {
       if (isLoggedIn){
-        profileGet()
-        .then((userData) => {
+        Promise.all([profileGet(), moviesGet()])
+        .then(([userData, moviesData]) => {
           setCurrentUser(userData.data);
+          setMoviesSaved(moviesData.data)
+          console.log('hello')
         })
         .catch(err => console.log(`Ошибка.....: ${err}`))
       }
       
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isLoggedIn]);
 
     const checkToken = () => {
@@ -161,20 +177,20 @@ function App() {
     const [moviesToWidth, setMoviesToWidth] = useState({all: Number, row: Number});
 
     function updateMoviesToWidth(width) {
-      if (width > 1100) 
-        {setMoviesToWidth({all: 16, row: 4})}
-      if ((width > 800) && (width <= 1100)) 
-        {setMoviesToWidth({all: 12, row: 3})}
-      if ((width > 500) && (width < 800)) 
-        {setMoviesToWidth({all: 8, row: 2})}
-      if (width <= 500) 
-        {setMoviesToWidth({all: 5, row: 2})}
+      if (width > WIDTH_XL) 
+        {setMoviesToWidth({all: MOVIES_TOTAL_XL, row: MOVIES_ROW_XL})}
+      if ((width > WIDTH_L) && (width <= WIDTH_XL)) 
+        {setMoviesToWidth({all: MOVIES_TOTAL_L, row: MOVIES_ROW_L})}
+      if ((width > WIDTH_M) && (width < WIDTH_L)) 
+        {setMoviesToWidth({all: MOVIES_TOTAL_M, row: MOVIES_ROW_M})}
+      if (width <= WIDTH_M) 
+        {setMoviesToWidth({all: MOVIES_TOTAL_S, row: MOVIES_ROW_M})}
       return
     }
 
     useEffect(() => {
       updateMoviesToWidth(width);
-    }, [width]);
+    }, [width, moviesFound]);
 
     useEffect(() => {
       if (moviesToDrow.length >= moviesFound.length){
@@ -188,7 +204,7 @@ function App() {
     useEffect(() => {
       if (isShortMovies === true) {
         let moviesShort = moviesFound.filter(function(movie) {
-          return (movie.duration < 40);
+          return (movie.duration < DURATION);
         });
         setMoviesToDrow(moviesShort.slice(0, moviesToWidth.all))
       } else {
@@ -235,8 +251,8 @@ function App() {
                     setMoviesToWidth = {setMoviesToWidth}
                     isMore = {isMore}
                     moviesToDrow = {moviesToDrow}
-                    moviesPlaceholder = {moviesPlaceholder}
-                    setMoviesPlaceholder = {setMoviesPlaceholder}
+                    formValueFound = {formValueFound}
+                    setFormValueFound = {setFormValueFound}
                   />
                   <Footer />
                 </>
@@ -252,14 +268,13 @@ function App() {
                     moviesSaved = {moviesSaved}
                     setMoviesSaved = {setMoviesSaved}
                     setMoviesFoundSaved = {setMoviesFoundSaved}
+                    moviesFoundSaved = {moviesFoundSaved}
                     moviesSavedToDrow={moviesSavedToDrow}
                     setMoviesSavedToDrow={setMoviesSavedToDrow}
                     moviesHandleDelete = {moviesHandleDelete}
                     isShortMoviesSaved = {isShortMoviesSaved}
                     setIsShortMoviesSaved = {setIsShortMoviesSaved}
                     setIsLoading = {setIsLoading}
-                    moviesSavedPlaceholder = {moviesSavedPlaceholder}
-                    setMoviesSavedPlaceholder = {setMoviesSavedPlaceholder}
                   />
                   <Footer />
                 </>
@@ -274,12 +289,16 @@ function App() {
                     isLoggedIn = {isLoggedIn}
                     setIsLoggedIn = {setIsLoggedIn}
                     handleUpdateUser = {handleUpdateUser}
+                    setMoviesFound = {setMoviesFound}
+                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
+                    setFormValueFound = {setFormValueFound}
                   />
                 </>
               }/>
               <Route path="/signup" element={
                 <>            
                   <Register
+                    isLoggedIn = {isLoggedIn}
                     setIsOk={setIsOk}
                     setIsLoggedIn = {setIsLoggedIn}
                     setIsInfoTooltipOpen={setIsInfoTooltipOpen}
@@ -292,6 +311,7 @@ function App() {
               <Route path="/signin" element={
                 <>
                   <Login
+                    isLoggedIn = {isLoggedIn}
                     setIsLoggedIn = {setIsLoggedIn}
                     setIsOk={setIsOk}
                     setIsInfoTooltipOpen={setIsInfoTooltipOpen}
@@ -299,6 +319,7 @@ function App() {
                     setMoviesSaved = {setMoviesSaved}
                     setMoviesFound = {setMoviesFound}
                     setMoviesSavedToDrow = {setMoviesSavedToDrow}
+                    moviesSavedToDrow = {moviesSavedToDrow}
                   />
                 </>
               }/>

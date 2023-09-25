@@ -5,7 +5,9 @@ import {signup, signin} from "../../utils/MainApi"
 
 import {moviesGet} from "../../utils/MainApi"
 
-function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound, setMoviesSaved, setMoviesSavedToDrow}) {
+import {regexEmail} from "../../utils/regex"
+
+function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound, setMoviesSaved, setMoviesSavedToDrow}) {
     const navigate = useNavigate();
 
     const [formValue, setFormValue] = useState({
@@ -30,22 +32,23 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
 
     const handleChange = (evt) => {
         const {name, value} = evt.target;
-        setIsValidForm(evt.target.closest('form').checkValidity())
         setFormValue({
             ...formValue,
             [name]: {
                 value: value,
-                isValidInput: evt.target.validity.valid,
-                validMessage: evt.target.validationMessage
+                isValidInput: (name !== 'email') ? evt.target.validity.valid : (regexEmail.test((formValue.email.value))),
+                validMessage: (name !== 'email') ? evt.target.validationMessage : ((regexEmail.test((formValue.email.value)) === false) ? 'Не хватает домена первого уровня' : '')
             }
         })
+        console.log(regexEmail.test((formValue.email.value)))
+        setIsValidForm((evt.target.closest('form').checkValidity() && (regexEmail.test((formValue.email.value)))))
     }    
 
-    const [isProccessing, setIsProccessing] = useState('Зарегистрироваться');
+    const [isProccessing, setIsProccessing] = useState(false);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        setIsProccessing('Регистрация...')
+        setIsProccessing(true)
         signup(formValue.name.value, formValue.email.value, formValue.password.value)
         .then((data) => {
             signin(formValue.email.value, formValue.password.value)
@@ -58,9 +61,7 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                 moviesGet()
                 .then((moviesData) => {
                     setMoviesSaved(moviesData.data);
-                    setMoviesSavedToDrow(moviesData.data);
                     console.log('перелогинивание')
-                    localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
                 })
                 .catch(err => console.log(`Ошибка.....: ${err}`))
             })
@@ -79,7 +80,11 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                 setIsInfoTooltipOpen(true)
             }
         })
-        .finally(() => setIsProccessing('Зарегистрироваться'));
+        .finally(() => setIsProccessing(false));
+    }
+
+    if (isLoggedIn === true) {
+        navigate('/profile');
     }
 
     return(
@@ -99,6 +104,7 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                                 maxLength="30"
                                 className={`register__input ${!formValue.name.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.name.value}
+                                disabled={isProccessing ? true : false}
                                 required
                                 >
                             </input>
@@ -114,6 +120,7 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                                 className={`register__input ${!formValue.email.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.email.value}
                                 required
+                                disabled={isProccessing ? true : false}
                                 >
                             </input>
                             <span className="register__input-span">E-mail</span>
@@ -129,6 +136,7 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                                 maxLength="30"
                                 className={`register__input ${!formValue.password.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.password.value}
+                                disabled={isProccessing ? true : false}
                                 required
                                 >
                             </input>
@@ -137,7 +145,12 @@ function Register({setIsOk, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound,
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="register__button" disabled={!isValidForm}>{isProccessing}</button>
+                <button
+                type="submit"
+                className="register__button"
+                disabled={!isValidForm && isProccessing}>
+                    {isProccessing ? "Регистрация..." : "Зарегистрироваться"}
+                </button>
             </form>
             <div className="register__link-group">
                 <p className="register__link_text">Уже зарегистрированы?</p>

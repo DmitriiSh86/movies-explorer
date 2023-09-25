@@ -115,7 +115,7 @@
 
 .login__button:disabled{
     background-color: #cccccc;
-  }
+}
 
 .login__link-group{
     display: flex;

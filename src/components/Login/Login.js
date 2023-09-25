@@ -5,7 +5,7 @@ import {signin} from "../../utils/MainApi"
 
 import {moviesGet} from "../../utils/MainApi"
 
-function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToDrow, moviesSaved, setMoviesSaved, setMoviesFound}) {
+function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,moviesSavedToDrow, setMoviesSavedToDrow, moviesSaved, setMoviesSaved, setMoviesFound}) {
     const navigate = useNavigate();
     const [formValue, setFormValue] = useState({
         email: {
@@ -35,24 +35,20 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToD
         })
     }
 
-    const [isProccessing, setIsProccessing] = useState('Войти');
+    const [isProccessing, setIsProccessing] = useState(false);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        setIsProccessing('Вход...')
+        setIsProccessing(true)
         signin(formValue.email.value, formValue.password.value)
         .then((data) => {
             setIsLoggedIn(true);
-            setMoviesFound([])
             setIsOk({status: true, message: 'Вы успешно авторизировались'});
             setIsInfoTooltipOpen(true)
             navigate('/movies');
             moviesGet()
             .then((moviesData) => {
-                setMoviesSaved(moviesData.data);
-                setMoviesSavedToDrow(moviesData.data);
-                console.log('перелогинивание')
-                localStorage.setItem('moviesSavedBase', JSON.stringify(moviesData.data));
+                setMoviesSaved(moviesData.data)
             })
             .catch(err => console.log(`Ошибка.....: ${err}`))
             
@@ -61,10 +57,12 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToD
             setIsOk({status: false, message: 'Что-то пошло не так...'});
             setIsInfoTooltipOpen(true)
         })
-        .finally(() => setIsProccessing('Войти'));
+        .finally(() => setIsProccessing(false));
     }
 
-
+    if (isLoggedIn === true) {
+        navigate('/profile');
+    }
 
     return(
         <section className="login">
@@ -81,6 +79,7 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToD
                                 type='email'
                                 className={`login__input ${!formValue.email.isValidInput ? "login__input_error" : ""}`}
                                 value={formValue.email.value}
+                                disabled={isProccessing ? true : false}
                                 required
                                 >
                             </input>
@@ -97,6 +96,7 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToD
                                 maxLength="30"
                                 className={`login__input ${!formValue.password.isValidInput ? "login__input_error" : ""}`}
                                 value={formValue.password.value}
+                                disabled={isProccessing ? true : false}
                                 required
                                 >
                             </input>
@@ -105,7 +105,12 @@ function Login({ setIsLoggedIn, setIsOk, setIsInfoTooltipOpen, setMoviesSavedToD
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="login__button" disabled={!isValidForm}>{isProccessing}</button>
+                <button
+                    type="submit"
+                    className="login__button"
+                    disabled={!isValidForm && isProccessing}>
+                    {isProccessing ? "Вход..." : "Войти"}
+                </button>
             </form>
             <div className="login__link-group">
                 <p className="login__link_text">Еще не зарегистрированы?</p>

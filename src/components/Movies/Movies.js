@@ -15,7 +15,7 @@ function Movies(props) {
     async function handleSearch(wordToFind){
         props.setIsLoading(true);
         localStorage.setItem('moviesPlaceholder', wordToFind);
-        props.setMoviesPlaceholder(localStorage.getItem('moviesPlaceholder'))
+        props.setFormValueFound(localStorage.getItem('moviesPlaceholder'))
         let localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
         if (localStorageMoviesBase === null){
             await dataBaseGet()
@@ -39,7 +39,7 @@ function Movies(props) {
         <section className="movies">
             <SearchForm
                 handleSearch = {handleSearch}
-                placeholder = {props.moviesPlaceholder}
+                formValueFound = {props.formValueFound}
             />
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMovies}
@@ -47,8 +47,8 @@ function Movies(props) {
                 localStorageName = 'moviesSwitcherStatus'
             />
             {props.isLoading === true ? (
-                <Preloader /> ) : props.moviesFound.length === 0 ? (
-                <NothingToDrow />
+                <Preloader /> ) : ((props.moviesToDrow.length === 0) && (JSON.parse(localStorage.getItem('moviesBase')) !== null)) ? (
+                <NothingToDrow  text = 'Ничего не найдено'/>
                 ) : (
             <div>
                 <ul className="movies__container" aria-label="movies">

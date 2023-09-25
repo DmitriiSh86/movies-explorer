@@ -11,22 +11,16 @@ import { moviesGet, moviesDelete } from "../../utils/MainApi"
 function SavedMovies(props) {
 
     function handleSearch(wordToFind){
-        localStorage.setItem('moviesSavedPlaceholder', wordToFind);
-        props.setMoviesSavedPlaceholder(localStorage.getItem('moviesSavedPlaceholder'))
-        let localStorageMoviesSavedBase = JSON.parse(localStorage.getItem('moviesSavedBase'));
-        if (wordToFind === ''){
-            props.setMoviesFoundSaved(localStorageMoviesSavedBase);
-            
-            localStorage.setItem('moviesSavedFound', JSON.stringify(localStorageMoviesSavedBase));
-        } else {
-            props.setIsLoading(true);            
-            let moviesFind = localStorageMoviesSavedBase.filter(function(movie) {
-                return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
-            });
-            localStorage.setItem('moviesSavedFound', JSON.stringify(moviesFind));
-            props.setMoviesFoundSaved(moviesFind);
-            props.setIsLoading(false);
-        }
+        props.setMoviesFoundSaved(props.moviesSaved);
+        props.setIsLoading(true);
+        let moviesFind = props.moviesSaved.filter(function(movie) {
+            return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
+        });
+        props.setMoviesSaved(moviesFind);
+        console.log('search2')
+        console.log(props.moviesFoundSaved)
+        props.setIsLoading(false);
+        
     }
 
     function moviesSavedHandleDelete(movie){
@@ -37,7 +31,6 @@ function SavedMovies(props) {
             moviesGet()
             .then((data) => {
                 props.setMoviesSaved(data.data)
-                localStorage.setItem('moviesSavedBase', JSON.stringify(data.data));
             })
             .catch(err => console.log(`Ошибка.....: ${err}`))
         })
@@ -55,23 +48,28 @@ function SavedMovies(props) {
                 setIsShortMovies = {props.setIsShortMoviesSaved}
                 localStorageName = 'moviesSavedSwitcherStatus'
             />
-            {((props.moviesSavedToDrow === null) || (props.moviesSavedToDrow.length === 0)) ? (
-                <NothingToDrow />
+            
+            {(props.moviesSaved.length === 0) ? (
+                <NothingToDrow text = 'Сохраненных фильмов нет'/>
+            ) : ((props.moviesSavedToDrow.length === 0) ? (
+                <NothingToDrow text = 'Ничего не найдено'/>
             ) : (
-            <ul aria-label="photo" className="movies-saved__container">
-                {props.moviesSavedToDrow.map((movie) => 
-                    <MoviesCardList
-                        key={movie._id}
-                        movie = {movie}
-                        iconNotActivButton={iconButtonDelete}
-                        moviesHandleDelete = {moviesSavedHandleDelete}
-                        trailerLink = {movie.trailer}
-                        nameRU = {movie.nameRU}
-                        image = {movie.image}
-                        duration = {movie.duration}
-                    />
-                )}
-            </ul>)}
+                <ul aria-label="photo" className="movies-saved__container">
+                    {props.moviesSavedToDrow.map((movie) => 
+                        <MoviesCardList
+                            key={movie._id}
+                            movie = {movie}
+                            iconNotActivButton={iconButtonDelete}
+                            moviesHandleDelete = {moviesSavedHandleDelete}
+                            trailerLink = {movie.trailer}
+                            nameRU = {movie.nameRU}
+                            image = {movie.image}
+                            duration = {movie.duration}
+                        />
+                    )}
+                </ul>
+            ))
+            }
         </section>
     )
 }

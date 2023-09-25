@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useNavigate} from 'react-router-dom'
 import {signOut} from "../../utils/MainApi"
+import {regexEmail} from "../../utils/regex"
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
+function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
@@ -29,21 +30,22 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
             ...formValue,
             [name]: {
                 value: value,
-                isValidInput: evt.target.validity.valid,
-                validMessage: evt.target.validationMessage
+                isValidInput: (name !== 'email') ? evt.target.validity.valid : (regexEmail.test((formValue.email.value))),
+                validMessage: (name !== 'email') ? evt.target.validationMessage : ((regexEmail.test((formValue.email.value)) === false) ? 'Не хватает домена первого уровня' : '')
             }
         })
-        if((evt.target.value !== currentUser[name]) && (evt.target.closest('form').checkValidity() === true)){
+        
+        if((evt.target.value !== currentUser[name]) && (evt.target.closest('form').checkValidity() === true) && (regexEmail.test((formValue.email.value)) === true)){
             setIsValidForm(true)
         } else {
             setIsValidForm(false)
         }
     }
 
-    const [isProccessing, setIsProccessing] = useState('Выйти из аккаунта');
+    const [isProccessing, setIsProccessing] = useState(false);
 
     function logOut(){
-        setIsProccessing('Выход...')
+        setIsProccessing(true)
         signOut()
         .then((data) => {
             setIsLoggedIn(false);
@@ -55,18 +57,23 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
             localStorage.removeItem('moviesSavedFound');
             localStorage.removeItem('moviesSavedPlaceholder');
             localStorage.removeItem('moviesPlaceholder');
-            setMovies([]);
+            setMoviesFound([]);
+            setMoviesSavedToDrow([]);
+            setFormValueFound('')
             navigate('/');
         })
         .catch((error) => {
             console.log(error.message)
         })
-        .finally(() => setIsProccessing('Выйти из аккаунта'));
+        .finally(() => setIsProccessing(false));
     }
 
     function handleSubmit(e){
+        setIsProccessing(true)
         e.preventDefault();
         handleUpdateUser(formValue.name.value, formValue.email.value)
+        setIsValidForm(false)
+        setIsProccessing(false)
     }
 
     return(
@@ -87,6 +94,7 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
                             placeholder={formValue.name.value}
                             className={`profile__input ${!formValue.name.isValidInput ? "profile__input_error" : ""}`}
                             value={formValue.name.value}
+                            disabled={isProccessing ? true : false}
                         >
                         </input>
                         <span className="profile__input-span_error">{formValue.name.validMessage}</span>
@@ -103,6 +111,7 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
                             placeholder={formValue.email.value}
                             className={`profile__input ${!formValue.email.isValidInput ? "profile__input_error" : ""}`}
                             value={formValue.email.value}
+                            disabled={isProccessing ? true : false}
                         >
                         </input>
                         <span className="profile__input-span_error">{formValue.email.validMessage}</span>
@@ -112,10 +121,16 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMovies}) {
                     onClick={handleSubmit}
                     type="submit"
                     className="profile__button"
-                    disabled={!isValidForm}
-                >Редактировать</button>
+                    disabled={!isValidForm && isProccessing}>
+                        Редактировать
+                </button>
             </form>
-            <button type="text" onClick={logOut} className="profile__logout">{isProccessing}</button>
+            <button
+                type="text"
+                onClick={logOut}
+                className="profile__logout">
+                {isProccessing ? "Выход..." : "Выйти из аккаунта"}
+            </button>
         </section>
     )
 }

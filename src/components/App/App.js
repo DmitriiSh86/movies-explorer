@@ -43,7 +43,10 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [isPopupOpen, setIsPopupOpen] = useState(false)
 
-    const [currentUser, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState({
+      name: '',
+      email: ''
+    });
     const [isLoading, setIsLoading] = useState(false)
 
     const [isOk, setIsOk] = useState({status: false, message: ''})
@@ -145,7 +148,7 @@ function App() {
       if (isLoggedIn){
         Promise.all([profileGet(), moviesGet()])
         .then(([userData, moviesData]) => {
-          setCurrentUser(userData.data);
+          setCurrentUser(userData.data);          
           setMoviesSaved(moviesData.data)
           console.log('hello')
         })
@@ -170,6 +173,7 @@ function App() {
 
     useEffect(() => {
       checkToken();
+      console.log('check token')
       // eslint-disable-next-line
     }, [])
 

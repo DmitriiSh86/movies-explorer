@@ -1,46 +1,35 @@
-import React, { useState } from "react";
+import { React, useState, useEffect } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signin} from "../../utils/MainApi"
+
+import Validation from '../../utils/validation';
 
 import {moviesGet} from "../../utils/MainApi"
 
 function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,moviesSavedToDrow, setMoviesSavedToDrow, moviesSaved, setMoviesSaved, setMoviesFound}) {
     const navigate = useNavigate();
+    const [isProccessing, setIsProccessing] = useState(false);
+
     const [formValue, setFormValue] = useState({
-        email: {
-            value: '',
-            isValidInput: false,
-            validMessage: ''
-        },
-        password: {
-            value: '',
-            isValidInput: false,
-            validMessage: ''
-        }
+        name: '',
+        email: '',
+        password: ''
     });
 
-    const [isValidForm, setIsValidForm] = useState(false);
+    const { formErrors, isValidForm, handleChange, resetForm } = Validation(formValue, setFormValue);
 
-    const handleChange = (evt) => {
-        const {name, value} = evt.target;
-        setIsValidForm(evt.target.closest('form').checkValidity())
-        setFormValue({
-            ...formValue,
-            [name]: {
-                value: value,
-                isValidInput: evt.target.validity.valid,
-                validMessage: evt.target.validationMessage
-            }
-        })
-    }
-
-    const [isProccessing, setIsProccessing] = useState(false);
+    useEffect(() => {
+        resetForm({
+            email: '',
+            password: ''
+        }, {}, false);
+      }, [resetForm]);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
         setIsProccessing(true)
-        signin(formValue.email.value, formValue.password.value)
+        signin(formValue.email, formValue.password)
         .then((data) => {
             setIsLoggedIn(true);
             setIsOk({status: true, message: 'Вы успешно авторизировались'});
@@ -77,14 +66,14 @@ function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,movies
                                 id='email'
                                 name='email'
                                 type='email'
-                                className={`login__input ${!formValue.email.isValidInput ? "login__input_error" : ""}`}
-                                value={formValue.email.value}
+                                className={`login__input ${formErrors.email ? "login__input_error" : ""}`}
+                                value={formValue.email}
                                 disabled={isProccessing}
                                 required
                                 >
                             </input>
                             <span className="login__input-span">E-mail</span>
-                            <span className="login__input-span login__input-span_error">{formValue.email.validMessage}</span>
+                            <span className="login__input-span login__input-span_error">{formErrors.email}</span>
                         </label>
                         <label className="login__input-field">
                             <input
@@ -94,14 +83,14 @@ function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,movies
                                 type='password'
                                 minLength="8"
                                 maxLength="30"
-                                className={`login__input ${!formValue.password.isValidInput ? "login__input_error" : ""}`}
-                                value={formValue.password.value}
+                                className={`login__input ${formErrors.password ? "login__input_error" : ""}`}
+                                value={formValue.password}
                                 disabled={isProccessing}
                                 required
                                 >
                             </input>
                             <span className="login__input-span">Пароль</span>
-                            <span className="login__input-span login__input-span_error">{formValue.password.validMessage}</span>
+                            <span className="login__input-span login__input-span_error">{formErrors.password}</span>
                         </label>
                     </div>
                 </div>

@@ -1,48 +1,40 @@
-import React, { useState, useContext } from "react";
-import { useNavigate} from 'react-router-dom'
+import { React, useState, useContext, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
 import {signOut} from "../../utils/MainApi"
-import {regexEmail} from "../../utils/regex"
+
+import Validation from '../../utils/validation';
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound}) {
+function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound, isLoggedIn}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
+    const [isProccessing, setIsProccessing] = useState(false);
 
-    const [formValue, setFormValue] = useState({name: {
-            value: currentUser.name,
-            isValidInput: true,
-            validMessage: ''
-        },
-        email: {
-            value: currentUser.email,
-            isValidInput: true,
-            validMessage: ''
-        }
+    const [formValue, setFormValue] = useState({
+        name: '',
+        email: ''
     });
 
-    const [isValidForm, setIsValidForm] = useState(false);
+    const [isChanges, setIsChanges] = useState(false);
 
-    const handleChange = (evt) => {
-        const {name, value} = evt.target;
-        setFormValue({
-            ...formValue,
-            [name]: {
-                value: value,
-                isValidInput: (name !== 'email') ? evt.target.validity.valid : (regexEmail.test((formValue.email.value))),
-                validMessage: (name !== 'email') ? evt.target.validationMessage : ((regexEmail.test((formValue.email.value)) === false) ? 'Не хватает домена первого уровня' : '')
-            }
-        })
-        
-        if((evt.target.value !== currentUser[name]) && (evt.target.closest('form').checkValidity() === true) && (regexEmail.test((formValue.email.value)) === true)){
-            setIsValidForm(true)
+    const { formErrors, isValidForm, handleChange, resetForm } = Validation(formValue, setFormValue);
+
+    useEffect(() => {
+        if ((formValue.email !== currentUser.email) || (formValue.name !== currentUser.name)) {
+            setIsChanges(true);
         } else {
-            setIsValidForm(false)
+            setIsChanges(false);
         }
-    }
 
-    const [isProccessing, setIsProccessing] = useState(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [formValue, setIsChanges]);
+
+      useEffect(() => {
+        resetForm(currentUser, {}, true);
+        setIsChanges(false);
+      }, [currentUser, resetForm]);
 
     function logOut(){
         setIsProccessing(true)
@@ -68,17 +60,16 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
         .finally(() => setIsProccessing(false));
     }
 
-    function handleSubmit(e){
+    function handleSubmit(evt){
         setIsProccessing(true)
-        e.preventDefault();
-        handleUpdateUser(formValue.name.value, formValue.email.value)
-        setIsValidForm(false)
+        evt.preventDefault();
+        handleUpdateUser(formValue.name, formValue.email)
         setIsProccessing(false)
     }
 
     return(
         <section className="profile__container">
-            <form className="profile__form">
+            <form className="profile__form" noValidate>
                 <div className="profile__form-container">
                     <h2 className="profile__title">Привет, {currentUser.name}</h2>
                     <div className="profile__input_container">
@@ -91,13 +82,13 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
                             minLength="2"
                             maxLength="30"
                             required
-                            placeholder={formValue.name.value}
-                            className={`profile__input ${!formValue.name.isValidInput ? "profile__input_error" : ""}`}
-                            value={formValue.name.value}
+                            placeholder={formValue.name}
+                            className={`profile__input ${formErrors.name ? "profile__input_error" : ""}`}
+                            value={formValue.name}
                             disabled={isProccessing}
                         >
                         </input>
-                        <span className="profile__input-span_error">{formValue.name.validMessage}</span>
+                        <span className="profile__input-span_error">{formErrors.name}</span>
                     </div>
                     <div className="profile__input_border"></div>
                     <div className="profile__input_container">
@@ -108,20 +99,20 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
                             name='email'
                             type='email'
                             required
-                            placeholder={formValue.email.value}
-                            className={`profile__input ${!formValue.email.isValidInput ? "profile__input_error" : ""}`}
-                            value={formValue.email.value}
+                            placeholder={formValue.email}
+                            className={`profile__input ${formErrors.email ? "profile__input_error" : ""}`}
+                            value={formValue.email}
                             disabled={isProccessing}
                         >
                         </input>
-                        <span className="profile__input-span_error">{formValue.email.validMessage}</span>
+                        <span className="profile__input-span_error">{formErrors.email}</span>
                     </div>
                 </div>
                 <button
                     onClick={handleSubmit}
                     type="submit"
                     className="profile__button"
-                    disabled={!isValidForm || isProccessing}>
+                    disabled={!isValidForm || isProccessing || !isChanges}>
                         Редактировать
                 </button>
             </form>

@@ -1,57 +1,39 @@
-import React, { useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom'
 import Logo from "../Logo/Logo"
 import {signup, signin} from "../../utils/MainApi"
 
 import {moviesGet} from "../../utils/MainApi"
 
-import {regexEmail} from "../../utils/regex"
+import Validation from '../../utils/validation';
 
 function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, setMoviesFound, setMoviesSaved, setMoviesSavedToDrow}) {
     const navigate = useNavigate();
 
+    const [isProccessing, setIsProccessing] = useState(false);
+
     const [formValue, setFormValue] = useState({
-        name: {
-            value: '',
-            isValidInput: false,
-            validMessage: ''
-        },
-        email: {
-            value: '',
-            isValidInput: false,
-            validMessage: ''
-        },
-        password: {
-            value: '',
-            isValidInput: false,
-            validMessage: ''
-        }
+        name: '',
+        email: '',
+        password: ''
     });
 
-    const [isValidForm, setIsValidForm] = useState(false);
+    const { formErrors, isValidForm, handleChange, resetForm } = Validation(formValue, setFormValue);
 
-    const handleChange = (evt) => {
-        const {name, value} = evt.target;
-        setFormValue({
-            ...formValue,
-            [name]: {
-                value: value,
-                isValidInput: (name !== 'email') ? evt.target.validity.valid : (regexEmail.test((formValue.email.value))),
-                validMessage: (name !== 'email') ? evt.target.validationMessage : ((regexEmail.test((formValue.email.value)) === false) ? 'Не хватает домена первого уровня' : '')
-            }
-        })
-        console.log(regexEmail.test((formValue.email.value)))
-        setIsValidForm((evt.target.closest('form').checkValidity() && (regexEmail.test((formValue.email.value)))))
-    }    
-
-    const [isProccessing, setIsProccessing] = useState(false);
+    useEffect(() => {
+        resetForm({
+            name: '',
+            email: '',
+            password: ''
+        }, {}, false);
+      }, [resetForm]);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
         setIsProccessing(true)
-        signup(formValue.name.value, formValue.email.value, formValue.password.value)
+        signup(formValue.name, formValue.email, formValue.password)
         .then((data) => {
-            signin(formValue.email.value, formValue.password.value)
+            signin(formValue.email, formValue.password)
             .then((data) => {
                 setIsLoggedIn(true);
                 setMoviesFound([])
@@ -102,14 +84,14 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 type='text'
                                 minLength="2"
                                 maxLength="30"
-                                className={`register__input ${!formValue.name.isValidInput ? "register__input_error" : ""}`}
-                                value={formValue.name.value}
+                                className={`register__input ${formErrors.name ? "register__input_error" : ""}`}
+                                value={formValue.name}
                                 disabled={isProccessing}
                                 required
                                 >
                             </input>
                             <span className="register__input-span">Имя</span>
-                            <span className="register__input-span register__input-span_error">{formValue.name.validMessage}</span>
+                            <span className="register__input-span register__input-span_error">{formErrors.name}</span>
                         </label>
                         <label className="register__input-field">
                             <input
@@ -117,14 +99,14 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 id='email'
                                 name='email'
                                 type='email'
-                                className={`register__input ${!formValue.email.isValidInput ? "register__input_error" : ""}`}
-                                value={formValue.email.value}
+                                className={`register__input ${formErrors.email ? "register__input_error" : ""}`}
+                                value={formValue.email}
                                 required
                                 disabled={isProccessing}
                                 >
                             </input>
                             <span className="register__input-span">E-mail</span>
-                            <span className="register__input-span register__input-span_error">{formValue.email.validMessage}</span>
+                            <span className="register__input-span register__input-span_error">{formErrors.email}</span>
                         </label>
                         <label className="register__input-field">
                             <input
@@ -134,14 +116,14 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 type='password'
                                 minLength="8"
                                 maxLength="30"
-                                className={`register__input ${!formValue.password.isValidInput ? "register__input_error" : ""}`}
-                                value={formValue.password.value}
+                                className={`register__input ${formErrors.password ? "register__input_error" : ""}`}
+                                value={formValue.password}
                                 disabled={isProccessing}
                                 required
                                 >
                             </input>
                             <span className="register__input-span">Пароль</span>
-                            <span className="register__input-span register__input-span_error">{formValue.password.validMessage}</span>
+                            <span className="register__input-span register__input-span_error">{formErrors.password}</span>
                         </label>
                     </div>
                 </div>

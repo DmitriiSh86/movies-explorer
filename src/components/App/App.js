@@ -197,13 +197,13 @@ function App() {
     }, [width, moviesFound]);
 
     useEffect(() => {
-      if (moviesToDrow.length >= moviesFound.length){
+      if ((moviesToDrow.length >= moviesFound.length) || (moviesToDrow.length < moviesToWidth.all)){
         setIsMore(false)
       } else {
         setIsMore(true)
       }
       
-    },[moviesToDrow, moviesFound.length]);
+    },[moviesToDrow, moviesFound.length, moviesToWidth]);
 
     useEffect(() => {
       if (isShortMovies === true) {

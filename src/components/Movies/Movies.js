@@ -21,7 +21,6 @@ function Movies(props) {
         if (localStorageMoviesBase === null){
             await dataBaseGet()
             .then((result) => {
-                console.log('ЗАпрос за базой данных')
                 localStorage.setItem('moviesBase', JSON.stringify(result));
                 localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
                 props.setIsLoading(false);
@@ -37,7 +36,6 @@ function Movies(props) {
         localStorage.setItem('moviesFound', JSON.stringify(moviesFind));
         props.setMoviesFound(moviesFind);
         props.setIsLoading(false);
-        console.log('Конец функции')
     }
 
     return(

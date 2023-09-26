@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
 
-function SearchForm({handleSearch, formValueFound, wordToFind, setWordToFind, setFormValueFound}) {
+function SearchForm({handleSearch, formValueFound, wordToFind, setWordToFind}) {
     const [formValue, setFormValue] = useState(formValueFound || '');
     const [isProccessing, setIsProccessing] = useState(false);
     const [isValidForm, setIsValidForm] = useState(true);
@@ -24,10 +24,6 @@ function SearchForm({handleSearch, formValueFound, wordToFind, setWordToFind, se
         }
         
     }
-
-    
-
-    
 
     return(
         <section className="search-form__container">

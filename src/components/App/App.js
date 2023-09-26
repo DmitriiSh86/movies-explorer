@@ -54,13 +54,10 @@ function App() {
     
 
     const [formValueFound, setFormValueFound] = useState((localStorage.getItem('moviesPlaceholder')) || '');
-    
     const [moviesFound, setMoviesFound] = useState(JSON.parse(localStorage.getItem('moviesFound')) || []);
-    const [moviesToDrow, setMoviesToDrow] = useState([]);
     const [isShortMovies, setIsShortMovies] = useState(JSON.parse(localStorage.getItem('moviesSwitcherStatus')) || false);
-
     const [isMore, setIsMore] = useState(true)
-
+    const [moviesToDrow, setMoviesToDrow] = useState([]);
 
 
     const [moviesSaved, setMoviesSaved] = useState([]);
@@ -273,6 +270,7 @@ function App() {
                     handleUpdateUser = {handleUpdateUser}
                     setMoviesFound = {setMoviesFound}
                     setFormValueFound = {setFormValueFound}
+                    setIsShortMovies = {setIsShortMovies}
                   />
                 </>
               }/>

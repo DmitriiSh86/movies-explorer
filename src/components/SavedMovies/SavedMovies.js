@@ -33,7 +33,6 @@ function SavedMovies(props) {
         props.setIsLoading(true);
         foundMovies();
         props.setIsLoading(false);
-        
     }
 
     function moviesSavedHandleDelete(movie){

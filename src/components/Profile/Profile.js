@@ -6,7 +6,7 @@ import Validation from '../../utils/validation';
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound}) {
+function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setFormValueFound, setIsShortMovies}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
@@ -41,16 +41,18 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
         signOut()
         .then((data) => {
             setIsLoggedIn(false);
-            localStorage.clear();
-            setMoviesFound([]);
-            setMoviesSavedToDrow([]);
             setFormValueFound('');
-            navigate('/');
+            setIsShortMovies(false);
+            setMoviesFound([]);
         })
         .catch((error) => {
             console.log(error.message)
         })
-        .finally(() => setIsProccessing(false));
+        .finally(() => {
+            localStorage.clear();
+            setIsProccessing(false)
+            navigate('/');
+        });
     }
 
     function handleSubmit(evt){

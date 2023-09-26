@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useEffect, useState } from "react";
 
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
@@ -10,16 +10,28 @@ import { moviesGet, moviesDelete } from "../../utils/MainApi"
 
 function SavedMovies(props) {
 
+    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
 
-    function handleSearch(wordToFind){
-        props.setMoviesFoundSaved(props.moviesSaved);
+    const [moviesSavedFound, setMoviesSavedFound] = useState(props.moviesSaved);
+
+    const [wordToFind, setWordToFind] = useState('');
+
+    useEffect(() => {
+        foundMovies();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isShortMoviesSaved, props.moviesSaved]);
+    
+    function foundMovies() {setMoviesSavedFound(
+            props.moviesSaved?.filter((movie) => (isShortMoviesSaved ? movie.duration < 40 : movie) &&
+              (movie.nameRU.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1 ||
+              movie.nameEN.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1)
+            )
+        )
+    }
+
+    function handleSearch(){
         props.setIsLoading(true);
-        let moviesFind = props.moviesSaved.filter(function(movie) {
-            return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
-        });
-        props.setMoviesSaved(moviesFind);
-        console.log('search2')
-        console.log(props.moviesFoundSaved)
+        foundMovies();
         props.setIsLoading(false);
         
     }
@@ -27,8 +39,6 @@ function SavedMovies(props) {
     function moviesSavedHandleDelete(movie){
         moviesDelete(movie._id)
         .then((data) => {
-            const newMoviesSavedFound = props.moviesSavedToDrow.filter((elem) => elem._id !== movie._id);
-            props.setMoviesFoundSaved(newMoviesSavedFound)
             moviesGet()
             .then((data) => {
                 props.setMoviesSaved(data.data)
@@ -42,21 +52,22 @@ function SavedMovies(props) {
         <section className="movies-saved">
             <SearchForm
                 handleSearch = {handleSearch}
-                placeholder = {props.moviesSavedPlaceholder}
+                wordToFind = {wordToFind}
+                setWordToFind = {setWordToFind}
             />
             <ShortFilmSwitcher 
-                isShortMovies = {props.isShortMoviesSaved}
-                setIsShortMovies = {props.setIsShortMoviesSaved}
+                isShortMovies = {isShortMoviesSaved}
+                setIsShortMovies = {setIsShortMoviesSaved}
                 localStorageName = 'moviesSavedSwitcherStatus'
             />
             
             {(props.moviesSaved.length === 0) ? (
                 <NothingToDrow text = 'Сохраненных фильмов нет'/>
-            ) : ((props.moviesSavedToDrow.length === 0) ? (
+            ) : ((moviesSavedFound.length === 0) ? (
                 <NothingToDrow text = 'Ничего не найдено'/>
             ) : (
                 <ul aria-label="photo" className="movies-saved__container">
-                    {props.moviesSavedToDrow.map((movie) => 
+                    {moviesSavedFound.map((movie) => 
                         <MoviesCardList
                             key={movie._id}
                             movie = {movie}

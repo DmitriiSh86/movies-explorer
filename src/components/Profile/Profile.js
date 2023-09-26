@@ -6,7 +6,7 @@ import Validation from '../../utils/validation';
 
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
-function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound, isLoggedIn}) {
+function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSavedToDrow, setFormValueFound}) {
     const navigate = useNavigate();
 
     const currentUser = useContext(CurrentUserContext);
@@ -41,17 +41,10 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
         signOut()
         .then((data) => {
             setIsLoggedIn(false);
-            localStorage.removeItem('moviesBase');
-            localStorage.removeItem('moviesSavedBase');
-            localStorage.removeItem('moviesSwitcherStatus');
-            localStorage.removeItem('moviesSavedSwitcherStatus');
-            localStorage.removeItem('moviesFound');
-            localStorage.removeItem('moviesSavedFound');
-            localStorage.removeItem('moviesSavedPlaceholder');
-            localStorage.removeItem('moviesPlaceholder');
+            localStorage.clear();
             setMoviesFound([]);
             setMoviesSavedToDrow([]);
-            setFormValueFound('')
+            setFormValueFound('');
             navigate('/');
         })
         .catch((error) => {

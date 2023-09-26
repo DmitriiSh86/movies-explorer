@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function SearchForm({handleSearch, formValueFound}) {
+function SearchForm({handleSearch, formValueFound, wordToFind, setWordToFind, setFormValueFound}) {
     const [formValue, setFormValue] = useState(formValueFound || '');
     const [isProccessing, setIsProccessing] = useState(false);
     const [isValidForm, setIsValidForm] = useState(true);
@@ -9,22 +9,23 @@ function SearchForm({handleSearch, formValueFound}) {
         setIsValidForm(true)
         const {value} = evt.target;
         setFormValue(value)
+        setWordToFind(value)
     }
 
     const findSubmit = (evt) => {
         evt.preventDefault();
         setIsProccessing(true)
-        console.log('Начало сабмита')
-        if (formValue === ''){
+        if (wordToFind === ''){
             setIsValidForm(false)
             setIsProccessing(false)
         } else {
-            handleSearch(formValue.toLowerCase());
+            handleSearch(wordToFind.toLowerCase());
             setIsProccessing(false)
-            console.log('Конец сабмита')
         }
         
     }
+
+    
 
     
 

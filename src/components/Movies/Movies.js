@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useState } from "react";
 import SearchForm from '../SearchForm/SearchForm'
 import MoviesCardList from '../MoviesCardList/MoviesCardList'
 import ShortFilmSwitcher from '../ShortFilmSwitcher/ShortFilmSwitcher'
@@ -11,6 +11,7 @@ import Preloader from '../Preloader/Preloader'
 import {dataBaseGet} from '../../utils/MoviesApi'
 
 function Movies(props) {
+    const [wordToFind, setWordToFind] = useState('');
 
     async function handleSearch(wordToFind){
         
@@ -43,6 +44,9 @@ function Movies(props) {
             <SearchForm
                 handleSearch = {handleSearch}
                 formValueFound = {props.formValueFound}
+                wordToFind = {wordToFind}
+                setWordToFind = {setWordToFind}
+                setFormValueFound = {props.setFormValueFound}
             />
             <ShortFilmSwitcher 
                 isShortMovies = {props.isShortMovies}

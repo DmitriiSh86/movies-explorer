@@ -65,23 +65,7 @@ function App() {
 
     const [moviesSaved, setMoviesSaved] = useState([]);
 
-    const [isShortMoviesSaved, setIsShortMoviesSaved] = useState(false);
-
-    const [moviesSavedToDrow, setMoviesSavedToDrow] = useState([]);
-
-    const [moviesFoundSaved, setMoviesFoundSaved] = useState(moviesSaved);
-
-    useEffect(() => {
-      if (isShortMoviesSaved === true) {
-        let moviesShort = moviesSaved.filter(function(movie) {
-          return (movie.duration < DURATION);
-        });
-        setMoviesSavedToDrow(moviesShort)
-        } else {
-          setMoviesSavedToDrow(moviesSaved)
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isShortMoviesSaved, moviesSaved]);
+    
 
     function openPopup(){
       setIsPopupOpen(true)
@@ -271,13 +255,7 @@ function App() {
                     isLoggedIn = {isLoggedIn}
                     moviesSaved = {moviesSaved}
                     setMoviesSaved = {setMoviesSaved}
-                    setMoviesFoundSaved = {setMoviesFoundSaved}
-                    moviesFoundSaved = {moviesFoundSaved}
-                    moviesSavedToDrow={moviesSavedToDrow}
-                    setMoviesSavedToDrow={setMoviesSavedToDrow}
                     moviesHandleDelete = {moviesHandleDelete}
-                    isShortMoviesSaved = {isShortMoviesSaved}
-                    setIsShortMoviesSaved = {setIsShortMoviesSaved}
                     setIsLoading = {setIsLoading}
                   />
                   <Footer />
@@ -294,7 +272,6 @@ function App() {
                     setIsLoggedIn = {setIsLoggedIn}
                     handleUpdateUser = {handleUpdateUser}
                     setMoviesFound = {setMoviesFound}
-                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
                     setFormValueFound = {setFormValueFound}
                   />
                 </>
@@ -308,7 +285,6 @@ function App() {
                     setIsInfoTooltipOpen={setIsInfoTooltipOpen}
                     setMoviesSaved = {setMoviesSaved}
                     setMoviesFound = {setMoviesFound}
-                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
                   />
                 </>
               }/>
@@ -322,8 +298,6 @@ function App() {
                     moviesSaved = {moviesSaved}
                     setMoviesSaved = {setMoviesSaved}
                     setMoviesFound = {setMoviesFound}
-                    setMoviesSavedToDrow = {setMoviesSavedToDrow}
-                    moviesSavedToDrow = {moviesSavedToDrow}
                   />
                 </>
               }/>

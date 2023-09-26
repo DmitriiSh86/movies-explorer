@@ -1,34 +1,49 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
 
-function SearchForm() {
-    const [formValue, setFormValue] = useState({
-        name: '',
-        email: '',
-        password: ''
-    });
-
+function SearchForm({handleSearch, formValueFound, wordToFind, setWordToFind}) {
+    const [formValue, setFormValue] = useState(formValueFound || '');
+    const [isProccessing, setIsProccessing] = useState(false);
+    const [isValidForm, setIsValidForm] = useState(true);
+    
     const handleChange = (evt) => {
-        const {name, value} = evt.target;
-        setFormValue({
-            ...formValue,
-            [name]: value
-        })
+        setIsValidForm(true)
+        const {value} = evt.target;
+        setFormValue(value)
+        setWordToFind(value)
     }
+
+    const findSubmit = (evt) => {
+        evt.preventDefault();
+        setIsProccessing(true)
+        if (wordToFind === ''){
+            setIsValidForm(false)
+            setIsProccessing(false)
+        } else {
+            handleSearch(wordToFind.toLowerCase());
+            setIsProccessing(false)
+        }
+        
+    }
+
     return(
         <section className="search-form__container">
-            <form className="search-form__form">
+            <form onSubmit={findSubmit} className="search-form__form">
                 <input
-                    onChange={handleChange} 
-                    id='searchFilm'
-                    type='text'
-                    name='searchFilm'
-                    placeholder="Фильм"
-                    className="search-form__input"
-                    value={formValue.searchFilm}
-                    required
+                    onChange = {handleChange} 
+                    id = 'searchFilm'
+                    name = 'searchFilm'
+                    type = "text"
+                    placeholder = 'Фильмы'
+                    className = "search-form__input"
+                    value = {formValue}
+                    disabled={isProccessing}
                     >
                 </input>
-                <button type="submit" className="search-form__button">Найти</button>
+                {!isValidForm ? (
+                    <span className="search-form__input-span search-form__input-span_error">Нужно ввести ключевое слово</span>
+                ) : (<></>)}
+                
+                <button type="submit" className="search-form__button"  disabled={isProccessing}>Найти</button>
             </form>
             <div className="search-form__border"></div>
         </section>

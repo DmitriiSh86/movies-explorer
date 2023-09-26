@@ -67,6 +67,10 @@
     padding-bottom: 9px;
 }
 
+.register__input_error {   
+    color: red;
+}
+
 .register__input:focus {
     border-color: #3456f3;
 }
@@ -85,9 +89,13 @@
     padding: 0;
 }
 
-.register__button:hover{
+.register__button:not([disabled]):hover {
     opacity: 0.8;
     transition: 0.2s ease;
+}
+
+.register__button:disabled{
+  background-color: #cccccc;
 }
 
 .register__link-group{
@@ -141,6 +149,11 @@
     top: -17px;
     right: 0;
     transition: 0.5s;
+}
+
+.register__input-span_error{
+    color: #FF3055;
+    top: 32px;
 }
 
 @media (min-height: 720px){

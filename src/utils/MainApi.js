@@ -1,5 +1,5 @@
-const BASE_URL = 'https://api.dmitrii-movies.nomoredomainsicu.ru';
-//const BASE_URL = 'http://localhost:4001';
+//const BASE_URL = 'https://api.dmitrii-movies.nomoredomainsicu.ru';
+const BASE_URL = 'http://localhost:4001';
 
 function checkResponse(res) {
     if (res.ok) return res.json();

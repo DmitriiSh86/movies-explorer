@@ -104,7 +104,7 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 maxLength="30"
                                 className={`register__input ${!formValue.name.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.name.value}
-                                disabled={isProccessing ? true : false}
+                                disabled={isProccessing}
                                 required
                                 >
                             </input>
@@ -120,7 +120,7 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 className={`register__input ${!formValue.email.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.email.value}
                                 required
-                                disabled={isProccessing ? true : false}
+                                disabled={isProccessing}
                                 >
                             </input>
                             <span className="register__input-span">E-mail</span>
@@ -136,7 +136,7 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                                 maxLength="30"
                                 className={`register__input ${!formValue.password.isValidInput ? "register__input_error" : ""}`}
                                 value={formValue.password.value}
-                                disabled={isProccessing ? true : false}
+                                disabled={isProccessing}
                                 required
                                 >
                             </input>
@@ -148,7 +148,7 @@ function Register({setIsOk, isLoggedIn, setIsLoggedIn, setIsInfoTooltipOpen, set
                 <button
                 type="submit"
                 className="register__button"
-                disabled={!isValidForm && isProccessing}>
+                disabled={!isValidForm || isProccessing}>
                     {isProccessing ? "Регистрация..." : "Зарегистрироваться"}
                 </button>
             </form>

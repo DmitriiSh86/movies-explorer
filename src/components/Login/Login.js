@@ -79,7 +79,7 @@ function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,movies
                                 type='email'
                                 className={`login__input ${!formValue.email.isValidInput ? "login__input_error" : ""}`}
                                 value={formValue.email.value}
-                                disabled={isProccessing ? true : false}
+                                disabled={isProccessing}
                                 required
                                 >
                             </input>
@@ -96,7 +96,7 @@ function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,movies
                                 maxLength="30"
                                 className={`login__input ${!formValue.password.isValidInput ? "login__input_error" : ""}`}
                                 value={formValue.password.value}
-                                disabled={isProccessing ? true : false}
+                                disabled={isProccessing}
                                 required
                                 >
                             </input>
@@ -108,7 +108,7 @@ function Login({ isLoggedIn, setIsLoggedIn, setIsOk, setIsInfoTooltipOpen,movies
                 <button
                     type="submit"
                     className="login__button"
-                    disabled={!isValidForm && isProccessing}>
+                    disabled={!isValidForm || isProccessing}>
                     {isProccessing ? "Вход..." : "Войти"}
                 </button>
             </form>

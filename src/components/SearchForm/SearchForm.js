@@ -1,35 +1,32 @@
 import React, { useState } from "react";
 
 function SearchForm({handleSearch, formValueFound}) {
-    const [formValue, setFormValue] = useState({
-        searchFilm: {
-            value: formValueFound || '',
-            isValidInput: false,
-            validMessage: ''
-        }
-    });
+    const [formValue, setFormValue] = useState(formValueFound || '');
     const [isProccessing, setIsProccessing] = useState(false);
-    const [isValidForm, setIsValidForm] = useState(false);
+    const [isValidForm, setIsValidForm] = useState(true);
     
     const handleChange = (evt) => {
-        const {name, value} = evt.target;
-        setIsValidForm(evt.target.closest('form').checkValidity())
-        setFormValue({
-            ...formValue,
-            [name]: {
-                value: value,
-                isValidInput: evt.target.validity.valid,
-                validMessage: evt.target.validationMessage
-            }
-        })
+        setIsValidForm(true)
+        const {value} = evt.target;
+        setFormValue(value)
     }
 
     const findSubmit = (evt) => {
-        setIsProccessing(true)
         evt.preventDefault();
-        handleSearch(formValue.searchFilm.value.toLowerCase());
-        setIsProccessing(false)
+        setIsProccessing(true)
+        console.log('Начало сабмита')
+        if (formValue === ''){
+            setIsValidForm(false)
+            setIsProccessing(false)
+        } else {
+            handleSearch(formValue.toLowerCase());
+            setIsProccessing(false)
+            console.log('Конец сабмита')
+        }
+        
     }
+
+    
 
     return(
         <section className="search-form__container">
@@ -39,15 +36,17 @@ function SearchForm({handleSearch, formValueFound}) {
                     id = 'searchFilm'
                     name = 'searchFilm'
                     type = "text"
-                    required
                     placeholder = 'Фильмы'
-                    className = {`search-form__input ${!formValue.searchFilm.isValidInput ? "searchFilm__input_error" : ""}`}
-                    value = {formValue.searchFilm.value}
-                    disabled={isProccessing ? true : false}
+                    className = "search-form__input"
+                    value = {formValue}
+                    disabled={isProccessing}
                     >
                 </input>
-                <span className="search-form__input-span search-form__input-span_error">{formValue.searchFilm.validMessage}</span>
-                <button type="submit" className="search-form__button"  disabled={!isValidForm && isProccessing}>Найти</button>
+                {!isValidForm ? (
+                    <span className="search-form__input-span search-form__input-span_error">Нужно ввести ключевое слово</span>
+                ) : (<></>)}
+                
+                <button type="submit" className="search-form__button"  disabled={isProccessing}>Найти</button>
             </form>
             <div className="search-form__border"></div>
         </section>

@@ -94,7 +94,7 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
                             placeholder={formValue.name.value}
                             className={`profile__input ${!formValue.name.isValidInput ? "profile__input_error" : ""}`}
                             value={formValue.name.value}
-                            disabled={isProccessing ? true : false}
+                            disabled={isProccessing}
                         >
                         </input>
                         <span className="profile__input-span_error">{formValue.name.validMessage}</span>
@@ -111,7 +111,7 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
                             placeholder={formValue.email.value}
                             className={`profile__input ${!formValue.email.isValidInput ? "profile__input_error" : ""}`}
                             value={formValue.email.value}
-                            disabled={isProccessing ? true : false}
+                            disabled={isProccessing}
                         >
                         </input>
                         <span className="profile__input-span_error">{formValue.email.validMessage}</span>
@@ -121,7 +121,7 @@ function Profile({setIsLoggedIn, handleUpdateUser, setMoviesFound, setMoviesSave
                     onClick={handleSubmit}
                     type="submit"
                     className="profile__button"
-                    disabled={!isValidForm && isProccessing}>
+                    disabled={!isValidForm || isProccessing}>
                         Редактировать
                 </button>
             </form>

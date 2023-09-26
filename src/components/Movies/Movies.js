@@ -13,6 +13,7 @@ import {dataBaseGet} from '../../utils/MoviesApi'
 function Movies(props) {
 
     async function handleSearch(wordToFind){
+        
         props.setIsLoading(true);
         localStorage.setItem('moviesPlaceholder', wordToFind);
         props.setFormValueFound(localStorage.getItem('moviesPlaceholder'))
@@ -20,19 +21,23 @@ function Movies(props) {
         if (localStorageMoviesBase === null){
             await dataBaseGet()
             .then((result) => {
-            localStorage.setItem('moviesBase', JSON.stringify(result));
-            localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
-            props.setIsLoading(false);
-        })
-        .catch(err => console.log(`Ошибка.....: ${err}`))
+                console.log('ЗАпрос за базой данных')
+                localStorage.setItem('moviesBase', JSON.stringify(result));
+                localStorageMoviesBase = JSON.parse(localStorage.getItem('moviesBase'));
+                props.setIsLoading(false);
+            })
+            .catch(err => {
+                console.log(`Ошибка.....: ${err}`)
+                localStorageMoviesBase = []
+            })
         }
-
         let moviesFind = localStorageMoviesBase.filter(function(movie) {
             return (movie.nameRU.toLowerCase().indexOf(wordToFind) !== -1) || (movie.nameEN.toLowerCase().indexOf(wordToFind) !== -1);
         });
         localStorage.setItem('moviesFound', JSON.stringify(moviesFind));
         props.setMoviesFound(moviesFind);
         props.setIsLoading(false);
+        console.log('Конец функции')
     }
 
     return(

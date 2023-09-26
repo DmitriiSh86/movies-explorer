@@ -10,6 +10,7 @@ import { moviesGet, moviesDelete } from "../../utils/MainApi"
 
 function SavedMovies(props) {
 
+
     function handleSearch(wordToFind){
         props.setMoviesFoundSaved(props.moviesSaved);
         props.setIsLoading(true);
